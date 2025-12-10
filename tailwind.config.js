@@ -82,12 +82,91 @@ module.exports = {
         DEFAULT: {
           css: {
             maxWidth: '100%',
-            color: '#171717',
+            color: '#44403C', // neutral-700
+            '--tw-prose-headings': '#54361F', // primary-900
+            '--tw-prose-links': '#B88636', // primary-500
+            '--tw-prose-bold': '#1C1917', // neutral-900
+            '--tw-prose-quotes': '#7B5222', // primary-700
+            // Headings
+            h1: {
+              fontFamily: 'var(--font-playfair), serif',
+              fontWeight: '700',
+              color: 'var(--tw-prose-headings)',
+            },
+            h2: {
+              fontFamily: 'var(--font-playfair), serif',
+              fontWeight: '600',
+              fontSize: '1.875em',
+              marginTop: '2em',
+              marginBottom: '1em',
+              paddingBottom: '0.5em',
+              borderBottom: '1px solid #E6D3AB', // primary-200
+              color: '#7B5222', // primary-700
+            },
+            h3: {
+              fontFamily: 'var(--font-playfair), serif',
+              fontWeight: '600',
+              fontSize: '1.5em',
+              marginTop: '1.6em',
+              marginBottom: '0.6em',
+              color: '#9A6B29', // primary-600
+            },
+            // Body text
+            p: {
+              lineHeight: '2',
+              marginTop: '1.5em',
+              marginBottom: '1.5em',
+              fontSize: '1.125rem', // 18px base size
+              color: '#292524', // neutral-800
+            },
+            // Blockquotes
+            blockquote: {
+              fontFamily: 'var(--font-playfair), serif',
+              fontStyle: 'italic',
+              fontWeight: '500',
+              borderLeftWidth: '4px',
+              borderLeftColor: '#D9B87D', // primary-300
+              backgroundColor: '#F9F7F2', // primary-50
+              padding: '2rem',
+              quotes: '"\\201C""\\201D""\\2018""\\2019"',
+              marginTop: '2.5em',
+              marginBottom: '2.5em',
+              borderRadius: '0.5rem',
+            },
+            // Links
             a: {
-              color: '#0ea5e9',
+              color: '#9A6B29', // primary-600
+              textDecoration: 'none',
+              borderBottom: '1px solid #D9B87D', // primary-300
+              transition: 'all 0.2s',
+              fontWeight: '500',
               '&:hover': {
-                color: '#0284c7',
+                color: '#7B5222', // primary-700
+                borderBottomColor: '#7B5222',
               },
+            },
+            // Lists
+            'ul > li::marker': {
+              color: '#D9B87D', // primary-300
+            },
+            'ol > li::marker': {
+              color: '#9A6B29', // primary-600
+              fontWeight: '600',
+            },
+            // Code
+            code: {
+              color: '#7B5222', // primary-700
+              backgroundColor: '#F2E8D5', // primary-100
+              padding: '0.2em 0.4em',
+              borderRadius: '0.25rem',
+              fontWeight: '600',
+            },
+            // Images
+            img: {
+              borderRadius: '0.75rem',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              marginTop: '2em',
+              marginBottom: '2em',
             },
           },
         },
