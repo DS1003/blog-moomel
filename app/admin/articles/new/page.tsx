@@ -1,12 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import ScrollReveal from '@/app/_components/ui/ScrollReveal';
 
 export default function NewArticlePage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+
+    // Upload states
+    const [parsingPdf, setParsingPdf] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
+
+    // Refs for file inputs
+    const pdfInputRef = useRef<HTMLInputElement>(null);
+    const imageInputRef = useRef<HTMLInputElement>(null);
+
     const [formData, setFormData] = useState({
         title: '',
         excerpt: '',
@@ -65,7 +74,7 @@ export default function NewArticlePage() {
                         <button
                             type="submit"
                             form="article-form"
-                            disabled={loading}
+                            disabled={loading || uploadingImage || parsingPdf}
                             className="btn-primary disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {loading ? (
@@ -119,9 +128,63 @@ export default function NewArticlePage() {
 
                         <div className="h-px bg-neutral-100"></div>
 
-                        {/* Content Editor Placeholders */}
+                        {/* Content & PDF Import */}
                         <div>
-                            <label htmlFor="content" className="block text-sm font-bold text-neutral-700 mb-2">Contenu</label>
+                            <div className="flex justify-between items-center mb-2">
+                                <label htmlFor="content" className="block text-sm font-bold text-neutral-700">Contenu</label>
+                                <div className="relative">
+                                    <input
+                                        ref={pdfInputRef}
+                                        type="file"
+                                        accept=".pdf"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+
+                                            const formData = new FormData();
+                                            formData.append('file', file);
+
+                                            setParsingPdf(true);
+
+                                            try {
+                                                const res = await fetch('/api/parse-pdf', { method: 'POST', body: formData });
+                                                if (res.ok) {
+                                                    const data = await res.json();
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        title: data.title || prev.title,
+                                                        excerpt: data.excerpt || prev.excerpt,
+                                                        content: data.content || prev.content
+                                                    }));
+                                                } else {
+                                                    const err = await res.json();
+                                                    alert("Erreur: " + (err.error || "Lecture PDF échouée"));
+                                                }
+                                            } catch (err) {
+                                                console.error(err);
+                                                alert("Erreur inattendue");
+                                            } finally {
+                                                setParsingPdf(false);
+                                                if (e.target) e.target.value = '';
+                                            }
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => pdfInputRef.current?.click()}
+                                        disabled={parsingPdf}
+                                        className="text-xs font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg hover:bg-primary-100 transition-colors flex items-center gap-1 disabled:opacity-50 disabled:cursor-wait"
+                                    >
+                                        {parsingPdf ? (
+                                            <>
+                                                <span className="w-3 h-3 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></span>
+                                                Lecture...
+                                            </>
+                                        ) : '📄 Importer depuis un PDF'}
+                                    </button>
+                                </div>
+                            </div>
                             <div className="relative">
                                 <textarea
                                     id="content"
@@ -141,19 +204,70 @@ export default function NewArticlePage() {
                         {/* Media & Settings */}
                         <div className="grid md:grid-cols-2 gap-8">
                             <div>
-                                <label htmlFor="imageUrl" className="block text-sm font-bold text-neutral-700 mb-2">Image de couverture (URL)</label>
-                                <div className="flex gap-2">
+                                <label className="block text-sm font-bold text-neutral-700 mb-2">Image de couverture</label>
+
+                                {/* Image Preview / Upload Area */}
+                                <div
+                                    className="relative aspect-video rounded-xl overflow-hidden border-2 border-dashed border-neutral-200 bg-neutral-50 hover:bg-neutral-100 transition-colors group cursor-pointer"
+                                    onClick={() => !uploadingImage && imageInputRef.current?.click()}
+                                >
+                                    {formData.imageUrl ? (
+                                        <img src={formData.imageUrl} alt="Cover" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-neutral-400">
+                                            <span className="text-2xl mb-2">🖼️</span>
+                                            <span className="text-sm font-medium">Cliquez pour uploader une image</span>
+                                        </div>
+                                    )}
+
+                                    {uploadingImage && (
+                                        <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center text-primary-600">
+                                            <div className="w-8 h-8 border-3 border-primary-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+                                            <span className="text-xs font-bold">Upload en cours...</span>
+                                        </div>
+                                    )}
+
                                     <input
-                                        type="url"
-                                        id="imageUrl"
-                                        name="imageUrl"
-                                        value={formData.imageUrl}
-                                        onChange={handleChange}
-                                        className="flex-1 px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm"
-                                        placeholder="https://images.unsplash.com/..."
+                                        ref={imageInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+
+                                            const formData = new FormData();
+                                            formData.append('file', file);
+
+                                            setUploadingImage(true);
+                                            try {
+                                                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                                                if (res.ok) {
+                                                    const data = await res.json();
+                                                    setFormData(prev => ({ ...prev, imageUrl: data.url }));
+                                                } else {
+                                                    const err = await res.json();
+                                                    alert("Erreur: " + (err.error || (err.details ? err.details : "Upload échoué")));
+                                                }
+                                            } catch (err) {
+                                                console.error(err);
+                                                alert("Erreur d'upload network");
+                                            } finally {
+                                                setUploadingImage(false);
+                                                if (e.target) e.target.value = '';
+                                            }
+                                        }}
                                     />
                                 </div>
-                                <p className="text-xs text-neutral-500 mt-2">Collez une URL Unsplash ou Cloudinary valide.</p>
+                                {/* Fallback URL input */}
+                                <input
+                                    type="url"
+                                    name="imageUrl"
+                                    value={formData.imageUrl}
+                                    onChange={handleChange}
+                                    placeholder="Ou collez une URL directe..."
+                                    className="mt-2 w-full px-3 py-2 text-sm border-b border-neutral-200 focus:border-primary-500 outline-none bg-transparent"
+                                />
                             </div>
 
                             <div className="bg-neutral-50 rounded-xl p-6 flex flex-col gap-4">
