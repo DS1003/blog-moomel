@@ -23,6 +23,7 @@ const bookmarkedArticles = [
     {
         id: "1",
         title: "La révolution de la cosmétique gamifiée en 2025",
+        slug: "revolution-cosmetique-gamifiee-2025",
         excerpt: "Découvrez comment la gamification transforme l'expérience beauté...",
         author: { name: "Dr. Sarah Martin" },
         createdAt: "2024-12-15T10:00:00Z",
