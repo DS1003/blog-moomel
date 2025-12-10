@@ -1,101 +1,63 @@
 import React from 'react';
+import { prisma } from "@/lib/prisma";
 import ArticleList from '@/app/_components/articles/ArticleList';
 
-// Demo data (replace with API call later)
-const demoArticles = [
-    {
-        id: "1",
-        title: "La révolution de la cosmétique gamifiée en 2025",
-        excerpt: "Découvrez comment la gamification transforme l'expérience beauté et engage les utilisateurs dans leur routine cosmétique quotidienne.",
-        author: { name: "Dr. Sarah Martin" },
-        createdAt: "2024-12-15T10:00:00Z",
-        images: [
-            { url: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&h=600&fit=crop" }
-        ]
-    },
-    {
-        id: "2",
-        title: "Les innovations technologiques dans le skincare",
-        excerpt: "IA, réalité augmentée et capteurs connectés : comment la technologie révolutionne nos soins de la peau.",
-        author: { name: "Marie Dubois" },
-        createdAt: "2024-12-14T14:30:00Z",
-        images: [
-            { url: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&h=600&fit=crop" }
-        ]
-    },
-    {
-        id: "3",
-        title: "Gamification et engagement utilisateur",
-        excerpt: "Comment les mécaniques de jeu augmentent l'adhérence aux routines beauté et améliorent les résultats.",
-        author: { name: "Alexandre Chen" },
-        createdAt: "2024-12-13T09:15:00Z",
-        images: [
-            { url: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&h=600&fit=crop" }
-        ]
-    },
-    {
-        id: "4",
-        title: "L'avenir de la beauté personnalisée",
-        excerpt: "Découvrez comment l'IA et les données personnelles créent des expériences beauté sur mesure.",
-        author: { name: "Emma Rodriguez" },
-        createdAt: "2024-12-12T16:45:00Z",
-        images: [
-            { url: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=600&fit=crop" }
-        ]
-    },
-    {
-        id: "5",
-        title: "Les tendances cosmétiques pour 2025",
-        excerpt: "Durabilité, technologie et personnalisation : les trois piliers de la cosmétique de demain.",
-        author: { name: "Sophie Laurent" },
-        createdAt: "2024-12-11T11:20:00Z",
-        images: [
-            { url: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&h=600&fit=crop" }
-        ]
-    },
-    {
-        id: "6",
-        title: "Comment Moomel révolutionne l'expérience beauté",
-        excerpt: "Plongez dans l'univers Moomel et découvrez notre approche unique de la cosmétique gamifiée.",
-        author: { name: "L'équipe Moomel" },
-        createdAt: "2024-12-10T13:00:00Z",
-        images: [
-            { url: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&h=600&fit=crop" }
-        ]
-    }
-];
-
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+    const articles = await prisma.article.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: {
+            author: true,
+            images: true,
+        },
+    });
     return (
-        <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-16 animate-slide-up">
-                    <h1 className="text-4xl md:text-5xl font-bold text-neutral-800 mb-6">
-                        Tous nos articles
+        <div className="min-h-screen bg-neutral-50 pb-20">
+            {/* Header / Hero for Articles */}
+            <div className="relative bg-primary-900 text-white pt-32 pb-24 px-4 overflow-hidden">
+                <div className="absolute inset-0 opacity-20">
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-primary-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+                    <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent-600 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+                </div>
+
+                <div className="max-w-7xl mx-auto relative z-10 text-center">
+                    <span className="inline-block py-1 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium tracking-wide mb-4 animate-fade-in">
+                        Blog & Conseils
+                    </span>
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 animate-slide-up">
+                        Explorez l'Univers Moomel
                     </h1>
-                    <p className="text-xl text-neutral-600 max-w-2xl mx-auto mb-8">
-                        Explorez notre bibliothèque de contenus sur la beauté, la technologie et la gamification.
+                    <p className="text-xl text-primary-100 max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                        Votre source d'inspiration pour une beauté consciente, naturelle et innovante.
                     </p>
 
                     {/* Search Bar */}
-                    <div className="max-w-xl mx-auto relative">
+                    <div className="max-w-2xl mx-auto relative animate-slide-up" style={{ animationDelay: '0.2s' }}>
                         <input
                             type="text"
-                            placeholder="Rechercher un article..."
-                            className="w-full px-6 py-4 rounded-full border border-neutral-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none shadow-sm transition-all pl-12"
+                            placeholder="Rechercher une astuce, un produit, un ingrédient..."
+                            className="w-full px-8 py-5 rounded-full border-none bg-white text-neutral-900 placeholder-neutral-400 focus:ring-4 focus:ring-primary-500/30 outline-none shadow-2xl text-lg"
                         />
-                        <svg
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
+                        <button className="absolute right-3 top-2.5 bg-primary-600 text-white p-2.5 rounded-full hover:bg-primary-700 transition-colors shadow-lg">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                <ArticleList articles={demoArticles} />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+                {/* Category Filters (Visual) */}
+                <div className="flex overflow-x-auto pb-4 gap-4 no-scrollbar justify-start md:justify-center mb-12">
+                    <button className="whitespace-nowrap px-6 py-3 rounded-full bg-neutral-900 text-white font-medium shadow-lg scale-105">
+                        Tous les articles
+                    </button>
+                    {['Soins Visage', 'Cheveux', 'Corps', 'Bien-être', 'Analyses', 'Tutoriels'].map((cat) => (
+                        <button key={cat} className="whitespace-nowrap px-6 py-3 rounded-full bg-white text-neutral-600 font-medium shadow-sm hover:shadow-md hover:text-primary-600 transition-all border border-neutral-100">
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+
+                <ArticleList articles={articles} />
             </div>
         </div>
     );

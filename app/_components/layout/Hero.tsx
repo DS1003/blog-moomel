@@ -4,52 +4,124 @@ import Button from '@/app/_components/ui/Button';
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-50/50 via-white to-accent-50/30"></div>
-            <div className="absolute top-20 left-10 w-72 h-72 bg-primary-200/20 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-200/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-28 lg:pt-20 bg-[#F9F7F2]">
+            {/* Organic Background Elements */}
+            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-primary-100/40 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-accent-100/30 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
 
-            {/* Hero Content */}
-            <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div className="animate-fade-in">
-                    {/* Logo Hero */}
-                    <div className="flex justify-center mb-8">
-                        <div className="relative w-24 h-24 lg:w-32 lg:h-32">
-                            <Image
-                                src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
-                                alt="Trésor Moomel Logo"
-                                fill
-                                className="object-contain animate-float"
-                                priority
-                            />
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+
+                    {/* Text Content (Left - 5 Cols) */}
+                    <div className="lg:col-span-5 text-center lg:text-left animate-fade-in order-2 lg:order-1">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-100 shadow-sm mb-8 animate-slide-up">
+                            <span className="flex h-2 w-2 relative">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+                            </span>
+                            <span className="text-xs font-semibold tracking-widest uppercase text-neutral-600">Le Blog Officiel</span>
+                        </div>
+
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-medium text-neutral-900 mb-8 leading-[1.1] tracking-tight">
+                            Naturelle <br />
+                            <span className="italic text-primary-600">Authentique</span> <br />
+                            Sénégalaise.
+                        </h1>
+
+                        <p className="text-lg md:text-xl text-neutral-600 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed font-light">
+                            L'âme de la cosmétique naturelle.
+                            Découvrez des rituels de beauté ancestraux, revisités pour la femme moderne en quête d'excellence.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
+                            <Button size="lg" href="#articles" className="rounded-full px-8 py-4 text-lg shadow-xl shadow-primary-500/20 hover:scale-105 transition-transform duration-300">
+                                Explorer le blog
+                            </Button>
+                            <Button variant="secondary" size="lg" href="/about" className="rounded-full px-8 py-4 text-lg border-neutral-200 hover:bg-white hover:text-primary-600 transition-colors">
+                                Notre vision
+                            </Button>
+                        </div>
+
+                        <div className="mt-12 flex items-center justify-center lg:justify-start gap-4 opacity-80">
+                            <div className="flex -space-x-3">
+                                {[1, 2, 3, 4].map(i => (
+                                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-neutral-200 overflow-hidden relative">
+                                        <Image
+                                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Moomel${i}`}
+                                            alt="User"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="text-sm">
+                                <span className="block font-bold text-neutral-900">2,000+</span>
+                                <span className="text-neutral-500">Lectrices passionnées</span>
+                            </div>
                         </div>
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                        <span className="text-gradient">Trésor Moomel</span>
-                        <br />
-                        <span className="text-neutral-800">Blog</span>
-                    </h1>
-                    <p className="text-xl md:text-2xl text-neutral-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-                        Découvrez l'univers de la cosmétique gamifiée.
-                        Conseils, innovations et tendances beauté pour 2025.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <Button size="lg" href="#articles">
-                            Découvrir les articles
-                        </Button>
-                        <Button variant="secondary" size="lg" href="/about">
-                            En savoir plus
-                        </Button>
-                    </div>
-                </div>
-            </div>
+                    {/* Image Composition (Right - 7 Cols) */}
+                    <div className="lg:col-span-7 relative h-[500px] md:h-[600px] lg:h-[700px] w-full order-1 lg:order-2 animate-fade-in">
+                        {/* Abstract background shape for images */}
+                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] text-white opacity-40 z-0" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,81.6,-46.6C91.4,-34.1,98.1,-19.2,95.8,-4.9C93.5,9.3,82.1,22.9,71.3,34.6C60.5,46.3,50.3,56.1,38.6,63.6C26.9,71.1,13.7,76.3,-0.6,77.3C-14.9,78.3,-28.7,75.1,-41.4,68.2C-54.1,61.3,-65.7,50.7,-73.9,37.9C-82.1,25.1,-86.9,10.1,-84.9,-3.9C-82.9,-17.9,-74.1,-30.9,-64.1,-42.2C-54.1,-53.5,-42.9,-63.1,-30.5,-71.4C-18.1,-79.7,-4.5,-86.7,6.8,-97.8L9.1,-79.2Z" transform="translate(100 100)" />
+                        </svg>
 
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <div className="w-6 h-10 border-2 border-neutral-400 rounded-full flex justify-center">
-                    <div className="w-1 h-3 bg-neutral-400 rounded-full mt-2 animate-pulse"></div>
+                        {/* Main Image (Medium) */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-80 md:w-80 md:h-[28rem] rounded-[10rem] border-[6px] border-white shadow-2xl z-20 overflow-hidden hover:scale-105 transition-transform duration-500">
+                            <Image
+                                src="/images/senegalese-woman-medium.png"
+                                alt="Beauté Naturelle"
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 256px, 320px"
+                                priority
+                            />
+                        </div>
+
+                        {/* Left Float (Dark) */}
+                        <div className="absolute top-[10%] left-[0%] md:left-[10%] lg:left-[5%] w-40 h-56 md:w-56 md:h-72 rounded-[4rem] border-[6px] border-white shadow-xl z-10 animate-float overflow-hidden" style={{ animationDelay: '0.5s' }}>
+                            <Image
+                                src="/images/senegalese-woman-dark.png"
+                                alt="Teint Ébène"
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 160px, 224px"
+                            />
+                        </div>
+
+                        {/* Right Float (Light) */}
+                        <div className="absolute bottom-[10%] right-[0%] md:right-[10%] lg:right-[5%] w-40 h-56 md:w-56 md:h-72 rounded-[4rem] border-[6px] border-white shadow-xl z-10 animate-float overflow-hidden" style={{ animationDelay: '1.2s' }}>
+                            <Image
+                                src="/images/senegalese-woman-light.png"
+                                alt="Teint Clair"
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 160px, 224px"
+                            />
+                        </div>
+
+                        {/* Decorative sticker */}
+                        <div className="absolute top-[20%] right-[15%] z-30 animate-spin-slow">
+                            <div className="w-24 h-24 relative">
+                                <svg viewBox="0 0 100 100" className="w-full h-full text-neutral-900 fill-current">
+                                    <defs>
+                                        <path id="circle" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                                    </defs>
+                                    <text fontSize="11">
+                                        <textPath xlinkHref="#circle">
+                                            • MOOMEL BEAUTE • AUTHENTICITE
+                                        </textPath>
+                                    </text>
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-2xl font-serif">M</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

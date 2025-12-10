@@ -2,21 +2,54 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Button from '@/app/_components/ui/Button';
 
 export default function NewArticlePage() {
     const router = useRouter();
+    const { data: session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
+    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+    const [tags, setTags] = useState<{ id: string; name: string }[]>([]);
     const [formData, setFormData] = useState({
         title: '',
         excerpt: '',
         content: '',
         imageUrl: '',
+        categoryId: '',
+        selectedTags: [] as string[],
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [catsRes, tagsRes] = await Promise.all([
+                    fetch('/api/categories'),
+                    fetch('/api/tags')
+                ]);
+                setCategories(await catsRes.json());
+                setTags(await tagsRes.json());
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const options = e.target.options;
+        const selected: string[] = [];
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                selected.push(options[i].value);
+            }
+        }
+        setFormData(prev => ({ ...prev, selectedTags: selected }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -33,8 +66,10 @@ export default function NewArticlePage() {
                     title: formData.title,
                     excerpt: formData.excerpt,
                     content: formData.content,
-                    authorId: 'admin-id-placeholder', // TODO: Get from session
+                    authorId: session?.user?.id,
                     images: formData.imageUrl ? [formData.imageUrl] : [],
+                    categoryId: formData.categoryId || undefined,
+                    tags: formData.selectedTags,
                 }),
             });
 
@@ -84,6 +119,43 @@ export default function NewArticlePage() {
                                 className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
                                 placeholder="https://..."
                             />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label htmlFor="categoryId" className="block text-sm font-medium text-neutral-700">
+                                    Catégorie
+                                </label>
+                                <select
+                                    id="categoryId"
+                                    name="categoryId"
+                                    value={formData.categoryId}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
+                                >
+                                    <option value="">Sélectionner une catégorie</option>
+                                    {categories.map(cat => (
+                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label htmlFor="tags" className="block text-sm font-medium text-neutral-700">
+                                    Tags (Maintenir Ctrl pour plusieurs)
+                                </label>
+                                <select
+                                    id="tags"
+                                    multiple
+                                    value={formData.selectedTags}
+                                    onChange={handleTagChange}
+                                    className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border h-32"
+                                >
+                                    {tags.map(tag => (
+                                        <option key={tag.id} value={tag.id}>{tag.name}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div>

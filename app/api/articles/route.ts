@@ -25,8 +25,10 @@ const articleSchema = z.object({
   title: z.string().min(3),
   excerpt: z.string().min(10),
   content: z.string().min(20),
-  authorId: z.string().uuid(),
+  authorId: z.string(),
   images: z.array(z.string().url()).optional(),
+  categoryId: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -59,6 +61,10 @@ export async function POST(req: NextRequest) {
       content: data.content,
       authorId: data.authorId,
       published: true, // Auto publish for now
+      categoryId: data.categoryId,
+      tags: data.tags ? {
+        connect: data.tags.map((id) => ({ id })),
+      } : undefined,
       images: {
         create: data.images?.map((url: string) => ({ url })) || [],
       },

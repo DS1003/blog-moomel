@@ -5,11 +5,11 @@
 
 
 :root {
-  --foreground-rgb: 23, 23, 23;
-  --background-start-rgb: 250, 250, 250;
-  --background-end-rgb: 255, 255, 255;
-  --primary-rgb: 14, 165, 233;
-  --accent-rgb: 217, 70, 239;
+  --foreground-rgb: 41, 37, 36;
+  --background-start-rgb: 249, 247, 242;
+  --background-end-rgb: 242, 232, 213;
+  --primary-rgb: 184, 134, 54;
+  --accent-rgb: 244, 63, 94;
 }
 
 * {
@@ -35,34 +35,35 @@ body {
 /* Glassmorphism effect */
 .glass {
   background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .glass-dark {
-  background: rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(41, 37, 36, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 /* Modern card styles */
 .card {
-  @apply bg-white/80 backdrop-blur-sm border border-neutral-200/50 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300;
+  @apply bg-white/60 backdrop-blur-md border border-white/40 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500;
 }
 
 .card-hover {
-  @apply hover:scale-[1.02] hover:shadow-xl hover:border-primary-200;
+  @apply hover:-translate-y-1 hover:shadow-primary-500/10;
 }
 
 /* Modern button styles */
 .btn-primary {
-  @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105;
+  @apply bg-primary-500 text-white px-8 py-3 rounded-full font-medium tracking-wide shadow-lg hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105 active:scale-95;
 }
 
 .btn-secondary {
-  @apply bg-white/80 backdrop-blur-sm border border-neutral-200 text-neutral-700 px-6 py-3 rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105;
+  @apply bg-white/50 backdrop-blur-sm border border-primary-200 text-primary-900 px-8 py-3 rounded-full font-medium shadow-sm hover:shadow-md transition-all duration-300 hover:bg-white hover:border-primary-300;
 }
 
 /* Text gradients */

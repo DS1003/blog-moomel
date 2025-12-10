@@ -3,10 +3,11 @@ import ArticleCard from "./ArticleCard";
 
 interface Article {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
-  author: { name: string };
-  createdAt: string;
+  author: { name: string | null };
+  createdAt: Date | string;
   images: { url: string }[];
 }
 
@@ -34,13 +35,14 @@ export default function ArticleList({ articles }: ArticleListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
       {articles.map((article, index) => (
-        <div 
+        <div
           key={article.id}
           className="animate-slide-up"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <ArticleCard
             id={article.id}
+            slug={article.slug}
             title={article.title}
             excerpt={article.excerpt}
             author={article.author?.name || "Anonyme"}

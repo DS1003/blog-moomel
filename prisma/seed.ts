@@ -59,16 +59,54 @@ async function main() {
     }),
   ]);
 
+  // Création des catégories
+  const categories = await prisma.category.createMany({
+    data: [
+      { name: "Skincare", slug: "skincare", description: "Tout pour une belle peau" },
+      { name: "Maquillage", slug: "maquillage", description: "Astuces et tutoriels makeup" },
+      { name: "Cheveux", slug: "cheveux", description: "Soins capillaires et coiffures" },
+      { name: "Bien-être", slug: "bien-etre", description: "Santé et relaxation" },
+    ],
+    skipDuplicates: true,
+  });
+
+  // Récupération des catégories pour les lier
+  const skincareCat = await prisma.category.findUnique({ where: { slug: "skincare" } });
+  const makeupCat = await prisma.category.findUnique({ where: { slug: "maquillage" } });
+
+  // Création des tags
+  const tags = await prisma.tag.createMany({
+    data: [
+      { name: "Routine", slug: "routine" },
+      { name: "Été", slug: "ete" },
+      { name: "Tendance 2025", slug: "tendance-2025" },
+      { name: "Anti-âge", slug: "anti-age" },
+      { name: "Hydratation", slug: "hydratation" },
+    ],
+    skipDuplicates: true,
+  });
+
+  // Récupération des tags
+  const routineTag = await prisma.tag.findUnique({ where: { slug: "routine" } });
+  const eteTag = await prisma.tag.findUnique({ where: { slug: "ete" } });
+  const trendTag = await prisma.tag.findUnique({ where: { slug: "tendance-2025" } });
+
   // Création d'articles
   const articles = await Promise.all([
-    prisma.article.create({
-      data: {
+    prisma.article.upsert({
+      where: { slug: "bienvenue-sur-moomel" },
+      update: {},
+      create: {
         title: "Bienvenue sur Moomel!",
         slug: "bienvenue-sur-moomel",
         excerpt: "Découvre le blog cosmétique gamifié.",
         content: "Ceci est le premier article du blog. Partage, commente et gagne des XP!",
         published: true,
         authorId: admin.id,
+        categoryId: skincareCat?.id,
+        tags: {
+          connect: [{ id: routineTag?.id }],
+        },
         images: {
           create: [
             { url: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2" },
@@ -77,14 +115,20 @@ async function main() {
         },
       },
     }),
-    prisma.article.create({
-      data: {
+    prisma.article.upsert({
+      where: { slug: "routine-beaute-pour-l-ete" },
+      update: {},
+      create: {
         title: "Routine beauté pour l'été",
         slug: "routine-beaute-pour-l-ete",
         excerpt: "Nos conseils pour une peau éclatante tout l'été.",
         content: "Hydratez, protégez, rayonnez ! Découvrez nos astuces et produits favoris.",
         published: true,
         authorId: users[0].id,
+        categoryId: skincareCat?.id,
+        tags: {
+          connect: [{ id: routineTag?.id }, { id: eteTag?.id }],
+        },
         images: {
           create: [
             { url: "https://images.unsplash.com/photo-1464983953574-0892a716854b" },
@@ -92,14 +136,20 @@ async function main() {
         },
       },
     }),
-    prisma.article.create({
-      data: {
+    prisma.article.upsert({
+      where: { slug: "top-5-des-rouges-a-levres-2025" },
+      update: {},
+      create: {
         title: "Top 5 des rouges à lèvres 2025",
         slug: "top-5-des-rouges-a-levres-2025",
         excerpt: "Les nouveautés à ne pas manquer cette année.",
         content: "Découvrez notre sélection testée et approuvée par la communauté.",
         published: true,
         authorId: users[1].id,
+        categoryId: makeupCat?.id,
+        tags: {
+          connect: [{ id: trendTag?.id }],
+        },
         images: {
           create: [
             { url: "https://images.unsplash.com/photo-1517841905240-472988babdf9" },

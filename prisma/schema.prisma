@@ -93,6 +93,32 @@ model Article {
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  
+  tags        Tag[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  articles    Article[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  articles    Article[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Image {
@@ -111,6 +137,12 @@ model Comment {
   
   article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId String
+  
+  hidden    Boolean  @default(false)
+  
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
