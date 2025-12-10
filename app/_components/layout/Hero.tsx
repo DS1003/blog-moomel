@@ -8,7 +8,7 @@ import { BlurText } from '@/app/_components/ui/BlurText';
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-28 lg:pt-20 bg-[#F9F7F2]">
+        <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-24 lg:pt-20 bg-[#F9F7F2]">
             {/* Organic Background Elements */}
             <motion.div
                 animate={{
@@ -44,8 +44,8 @@ export default function Hero() {
                 <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
 
                     {/* Text Content (Left - 5 Cols) */}
-                    <div className="lg:col-span-5 text-center lg:text-left animate-fade-in order-2 lg:order-1">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-100 shadow-sm mb-8 animate-slide-up">
+                    <div className="lg:col-span-5 text-center lg:text-left animate-fade-in order-2 lg:order-1 pt-8 lg:pt-0">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-100 shadow-sm mb-6 lg:mb-8 animate-slide-up bg-opacity-80 backdrop-blur-sm">
                             <span className="flex h-2 w-2 relative">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
@@ -53,7 +53,7 @@ export default function Hero() {
                             <span className="text-xs font-semibold tracking-widest uppercase text-neutral-600">Le Blog Officiel</span>
                         </div>
 
-                        <div className="text-4xl md:text-7xl lg:text-8xl font-serif font-medium text-neutral-900 mb-8 leading-[1.1] tracking-tight">
+                        <div className="text-5xl md:text-7xl lg:text-8xl font-serif font-medium text-neutral-900 mb-6 lg:mb-8 leading-[1.05] tracking-tight">
                             <BlurText
                                 text="Naturelle"
                                 delay={100}
@@ -121,7 +121,7 @@ export default function Hero() {
                         </svg>
 
                         {/* Main Image (Medium) */}
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-80 md:w-80 md:h-[28rem] rounded-[10rem] border-[6px] border-white shadow-2xl z-20 overflow-hidden hover:scale-105 transition-transform duration-500">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-80 md:w-80 md:h-[28rem] max-w-[80vw] rounded-[10rem] border-[6px] border-white shadow-2xl z-20 overflow-hidden hover:scale-105 transition-transform duration-500">
                             <Image
                                 src="/images/senegalese-woman-medium.png"
                                 alt="Beauté Naturelle"
@@ -133,7 +133,7 @@ export default function Hero() {
                         </div>
 
                         {/* Left Float (Dark) */}
-                        <div className="absolute top-[10%] left-[0%] md:left-[10%] lg:left-[5%] w-40 h-56 md:w-56 md:h-72 rounded-[4rem] border-[6px] border-white shadow-xl z-10 animate-float overflow-hidden" style={{ animationDelay: '0.5s' }}>
+                        <div className="absolute top-[10%] left-[0%] md:left-[10%] lg:left-[5%] w-32 h-44 md:w-56 md:h-72 rounded-[3rem] md:rounded-[4rem] border-[4px] md:border-[6px] border-white shadow-xl z-10 animate-float overflow-hidden" style={{ animationDelay: '0.5s' }}>
                             <Image
                                 src="/images/senegalese-woman-dark.png"
                                 alt="Teint Ébène"

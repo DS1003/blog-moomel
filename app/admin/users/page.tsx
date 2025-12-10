@@ -61,7 +61,7 @@ export default function UsersPage() {
                     </div>
                 </ScrollReveal>
 
-                <ScrollReveal animation="slide-up" delay={0.2}>
+                <ScrollReveal animation="fade-up" delay={0.2}>
                     <div className="bg-white rounded-[2rem] shadow-sm border border-neutral-100 overflow-hidden">
                         {/* Toolbar */}
                         <div className="p-6 border-b border-neutral-100 flex flex-col sm:flex-row gap-4 justify-between items-center">
@@ -125,10 +125,10 @@ export default function UsersPage() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className={`px-2 py-1 inline-flex text-xs font-bold rounded-lg uppercase tracking-wide border ${user.role === 'ADMIN'
-                                                            ? 'bg-purple-50 text-purple-700 border-purple-100'
-                                                            : user.role === 'MODERATOR'
-                                                                ? 'bg-blue-50 text-blue-700 border-blue-100'
-                                                                : 'bg-neutral-50 text-neutral-500 border-neutral-100'
+                                                        ? 'bg-purple-50 text-purple-700 border-purple-100'
+                                                        : user.role === 'MODERATOR'
+                                                            ? 'bg-blue-50 text-blue-700 border-blue-100'
+                                                            : 'bg-neutral-50 text-neutral-500 border-neutral-100'
                                                         }`}>
                                                         {user.role}
                                                     </span>

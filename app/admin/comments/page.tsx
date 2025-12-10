@@ -56,7 +56,7 @@ export default function CommentsPage() {
                     </div>
                 </ScrollReveal>
 
-                <ScrollReveal animation="slide-up" delay={0.2}>
+                <ScrollReveal animation="fade-up" delay={0.2}>
                     <div className="bg-white rounded-[2rem] shadow-sm border border-neutral-100 overflow-hidden">
                         {/* Toolbar */}
                         <div className="p-6 border-b border-neutral-100 flex gap-4 overflow-x-auto">

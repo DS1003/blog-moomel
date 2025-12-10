@@ -46,12 +46,12 @@ export default async function ArticlesPage() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
                 {/* Category Filters (Visual) */}
-                <div className="flex overflow-x-auto pb-4 gap-4 no-scrollbar justify-start md:justify-center mb-12">
-                    <button className="whitespace-nowrap px-6 py-3 rounded-full bg-neutral-900 text-white font-medium shadow-lg scale-105">
+                <div className="flex overflow-x-auto pb-4 gap-3 md:gap-4 no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 justify-start md:justify-center mb-12">
+                    <button className="whitespace-nowrap px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-base rounded-full bg-neutral-900 text-white font-medium shadow-lg scale-105 flex-shrink-0">
                         Tous les articles
                     </button>
                     {['Soins Visage', 'Cheveux', 'Corps', 'Bien-être', 'Analyses', 'Tutoriels'].map((cat) => (
-                        <button key={cat} className="whitespace-nowrap px-6 py-3 rounded-full bg-white text-neutral-600 font-medium shadow-sm hover:shadow-md hover:text-primary-600 transition-all border border-neutral-100">
+                        <button key={cat} className="whitespace-nowrap px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-base rounded-full bg-white text-neutral-600 font-medium shadow-sm hover:shadow-md hover:text-primary-600 transition-all border border-neutral-100 flex-shrink-0">
                             {cat}
                         </button>
                     ))}

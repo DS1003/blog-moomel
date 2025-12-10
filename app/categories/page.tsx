@@ -63,12 +63,12 @@ export default function CategoriesPage() {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {categories.map((category, idx) => (
                         <Link
                             href={`/articles?category=${category.slug}`}
                             key={category.slug}
-                            className="group relative h-[300px] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 block"
+                            className="group relative h-[240px] md:h-[300px] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 block w-full"
                             style={{ animationDelay: `${idx * 100}ms` }}
                         >
                             <Image
