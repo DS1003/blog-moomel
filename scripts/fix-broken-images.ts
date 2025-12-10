@@ -3,32 +3,36 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('Fixing image URLs...');
+    console.log('Fixing broken image URLs in database...');
 
-    // Update articles with the zigunyzoryda domain
-    const brokenImages = await prisma.image.findMany({
+    // The bad fallback image that is causing 404s
+    const badFallback = 'https://images.unsplash.com/photo-1546539782-d922a9332baa?q=80&w=800&auto=format&fit=crop';
+
+    // A stable, high-quality spa/nature image as the new fallback
+    const newFallback = 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=800';
+
+    // 1. Find images with the bad fallback URL
+    const badFallbackImages = await prisma.image.findMany({
         where: {
             url: {
-                contains: 'zigunyzoryda',
+                contains: '1546539782-d922a9332baa',
             },
         },
     });
 
-    console.log(`Found ${brokenImages.length} broken images.`);
+    console.log(`Found ${badFallbackImages.length} images with the broken fallback URL.`);
 
-    // Replace with a default Unsplash image
-    const fallbackImage = 'https://images.unsplash.com/photo-1546539782-d922a9332baa?q=80&w=800&auto=format&fit=crop';
-
-    for (const img of brokenImages) {
+    for (const img of badFallbackImages) {
         await prisma.image.update({
             where: { id: img.id },
-            data: {
-                url: fallbackImage,
-            },
+            data: { url: newFallback },
         });
     }
 
-    console.log('Images updated.');
+    // 2. Also check for any remaining 'zigunyzoryda' or other broken patterns if needed
+    // (Optional: keep strictly to fixing the current issue to avoid unintended side effects)
+
+    console.log('Database images fixed successfully.');
 }
 
 main()

@@ -53,7 +53,7 @@ export default function Hero() {
                             <span className="text-xs font-semibold tracking-widest uppercase text-neutral-600">Le Blog Officiel</span>
                         </div>
 
-                        <div className="text-5xl md:text-7xl lg:text-8xl font-serif font-medium text-neutral-900 mb-8 leading-[1.1] tracking-tight">
+                        <div className="text-4xl md:text-7xl lg:text-8xl font-serif font-medium text-neutral-900 mb-8 leading-[1.1] tracking-tight">
                             <BlurText
                                 text="Naturelle"
                                 delay={100}
