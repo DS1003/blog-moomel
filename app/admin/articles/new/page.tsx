@@ -2,210 +2,187 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import Button from '@/app/_components/ui/Button';
+import ScrollReveal from '@/app/_components/ui/ScrollReveal';
 
 export default function NewArticlePage() {
     const router = useRouter();
-    const { data: session } = useSession();
-    const [isLoading, setIsLoading] = useState(false);
-    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
-    const [tags, setTags] = useState<{ id: string; name: string }[]>([]);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         excerpt: '',
         content: '',
         imageUrl: '',
-        categoryId: '',
-        selectedTags: [] as string[],
+        published: false
     });
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [catsRes, tagsRes] = await Promise.all([
-                    fetch('/api/categories'),
-                    fetch('/api/tags')
-                ]);
-                setCategories(await catsRes.json());
-                setTags(await tagsRes.json());
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const options = e.target.options;
-        const selected: string[] = [];
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                selected.push(options[i].value);
-            }
-        }
-        setFormData(prev => ({ ...prev, selectedTags: selected }));
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData(prev => ({ ...prev, published: e.target.checked }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
+        setLoading(true);
 
         try {
             const res = await fetch('/api/articles', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: formData.title,
-                    excerpt: formData.excerpt,
-                    content: formData.content,
-                    authorId: session?.user?.id,
-                    images: formData.imageUrl ? [formData.imageUrl] : [],
-                    categoryId: formData.categoryId || undefined,
-                    tags: formData.selectedTags,
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
             });
 
-            if (!res.ok) throw new Error('Erreur lors de la création');
-
-            router.push('/admin');
+            if (res.ok) {
+                router.push('/admin/articles');
+                router.refresh();
+            } else {
+                const error = await res.json();
+                alert(`Erreur: ${error.error || 'Impossible de créer l\'article'}`);
+            }
         } catch (error) {
             console.error(error);
-            alert('Erreur lors de la création de l\'article');
+            alert("Une erreur est survenue");
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 bg-neutral-50">
-            <div className="max-w-3xl mx-auto">
-                <h1 className="text-3xl font-bold text-neutral-800 mb-8">Nouvel Article</h1>
+        <div className="max-w-4xl mx-auto pb-20">
+            <ScrollReveal animation="fade-up">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 className="text-3xl font-serif font-medium text-neutral-900">Nouvel Article</h1>
+                        <p className="text-neutral-500 mt-1">Créez un contenu inspirant pour votre communauté.</p>
+                    </div>
+                    <div className="flex gap-3">
+                        <button type="button" onClick={() => router.back()} className="px-4 py-2 rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 font-medium transition-colors">
+                            Annuler
+                        </button>
+                        <button
+                            type="submit"
+                            form="article-form"
+                            disabled={loading}
+                            className="btn-primary disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    <span>Création...</span>
+                                </>
+                            ) : (
+                                <span>Publier</span>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </ScrollReveal>
 
-                <div className="card p-8">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-neutral-700">
-                                Titre
-                            </label>
-                            <input
-                                type="text"
-                                id="title"
-                                name="title"
-                                required
-                                value={formData.title}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
-                            />
-                        </div>
+            <ScrollReveal animation="fade-up" delay={0.1}>
+                <div className="bg-white rounded-[2rem] shadow-sm border border-neutral-100 p-8">
+                    <form id="article-form" onSubmit={handleSubmit} className="space-y-8">
 
-                        <div>
-                            <label htmlFor="imageUrl" className="block text-sm font-medium text-neutral-700">
-                                URL de l'image principale
-                            </label>
-                            <input
-                                type="url"
-                                id="imageUrl"
-                                name="imageUrl"
-                                value={formData.imageUrl}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
-                                placeholder="https://..."
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Main Info */}
+                        <div className="space-y-6">
                             <div>
-                                <label htmlFor="categoryId" className="block text-sm font-medium text-neutral-700">
-                                    Catégorie
-                                </label>
-                                <select
-                                    id="categoryId"
-                                    name="categoryId"
-                                    value={formData.categoryId}
+                                <label htmlFor="title" className="block text-sm font-bold text-neutral-700 mb-2">Titre de l'article</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    required
+                                    value={formData.title}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
-                                >
-                                    <option value="">Sélectionner une catégorie</option>
-                                    {categories.map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                    ))}
-                                </select>
+                                    className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-50 transition-all outline-none font-serif text-lg"
+                                    placeholder="Ex: Les secrets du beurre de karité..."
+                                />
                             </div>
 
                             <div>
-                                <label htmlFor="tags" className="block text-sm font-medium text-neutral-700">
-                                    Tags (Maintenir Ctrl pour plusieurs)
-                                </label>
-                                <select
-                                    id="tags"
-                                    multiple
-                                    value={formData.selectedTags}
-                                    onChange={handleTagChange}
-                                    className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border h-32"
-                                >
-                                    {tags.map(tag => (
-                                        <option key={tag.id} value={tag.id}>{tag.name}</option>
-                                    ))}
-                                </select>
+                                <label htmlFor="excerpt" className="block text-sm font-bold text-neutral-700 mb-2">Résumé (Excerpt)</label>
+                                <textarea
+                                    id="excerpt"
+                                    name="excerpt"
+                                    required
+                                    rows={3}
+                                    value={formData.excerpt}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-50 transition-all outline-none"
+                                    placeholder="Une brève description qui apparaîtra dans les cartes..."
+                                />
+                                <p className="text-xs text-neutral-400 mt-2 text-right">{formData.excerpt.length}/300 caractères</p>
                             </div>
                         </div>
 
+                        <div className="h-px bg-neutral-100"></div>
+
+                        {/* Content Editor Placeholders */}
                         <div>
-                            <label htmlFor="excerpt" className="block text-sm font-medium text-neutral-700">
-                                Extrait
-                            </label>
-                            <textarea
-                                id="excerpt"
-                                name="excerpt"
-                                rows={3}
-                                required
-                                value={formData.excerpt}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
-                            />
+                            <label htmlFor="content" className="block text-sm font-bold text-neutral-700 mb-2">Contenu</label>
+                            <div className="relative">
+                                <textarea
+                                    id="content"
+                                    name="content"
+                                    required
+                                    rows={15}
+                                    value={formData.content}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-50 transition-all outline-none font-serif leading-relaxed"
+                                    placeholder="Écrivez votre article ici... (Support Markdown simple)"
+                                />
+                            </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="content" className="block text-sm font-medium text-neutral-700">
-                                Contenu
-                            </label>
-                            <textarea
-                                id="content"
-                                name="content"
-                                rows={10}
-                                required
-                                value={formData.content}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 px-4 py-2 border"
-                            />
+                        <div className="h-px bg-neutral-100"></div>
+
+                        {/* Media & Settings */}
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <label htmlFor="imageUrl" className="block text-sm font-bold text-neutral-700 mb-2">Image de couverture (URL)</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="url"
+                                        id="imageUrl"
+                                        name="imageUrl"
+                                        value={formData.imageUrl}
+                                        onChange={handleChange}
+                                        className="flex-1 px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm"
+                                        placeholder="https://images.unsplash.com/..."
+                                    />
+                                </div>
+                                <p className="text-xs text-neutral-500 mt-2">Collez une URL Unsplash ou Cloudinary valide.</p>
+                            </div>
+
+                            <div className="bg-neutral-50 rounded-xl p-6 flex flex-col gap-4">
+                                <h3 className="text-sm font-bold text-neutral-900">Paramètres de publication</h3>
+
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            name="published"
+                                            checked={formData.published}
+                                            onChange={handleCheckbox}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                    </div>
+                                    <span className="text-sm font-medium text-neutral-700 group-hover:text-neutral-900">Publier immédiatement</span>
+                                </label>
+
+                                <div className="text-xs text-neutral-400">
+                                    <p>• L'article sera visible sur la page d'accueil si publié.</p>
+                                    <p>• Les abonnés recevront une notification (bientôt).</p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="flex justify-end space-x-4">
-                            <Button
-                                variant="secondary"
-                                onClick={() => router.back()}
-                                type="button"
-                            >
-                                Annuler
-                            </Button>
-                            <Button
-                                type="submit"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? 'Création...' : 'Créer l\'article'}
-                            </Button>
-                        </div>
                     </form>
                 </div>
-            </div>
+            </ScrollReveal>
         </div>
     );
 }

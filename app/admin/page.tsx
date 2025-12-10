@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   // }
 
   return (
-    <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 bg-[#F9F7F2]">
+    <div className="min-h-screen pb-20 px-4 sm:px-6 lg:px-8 bg-[#F9F7F2]">
       <div className="max-w-7xl mx-auto">
         <ScrollReveal animation="fade-up">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
@@ -123,8 +123,8 @@ export default function AdminDashboard() {
                           </td>
                           <td className="px-4 py-4 whitespace-nowrap">
                             <span className={`px-3 py-1 inline-flex text-xs font-bold rounded-full uppercase tracking-wide ${article.published
-                                ? 'bg-primary-100 text-primary-700'
-                                : 'bg-neutral-100 text-neutral-500'
+                              ? 'bg-primary-100 text-primary-700'
+                              : 'bg-neutral-100 text-neutral-500'
                               }`}>
                               {article.published ? 'Publié' : 'Brouillon'}
                             </span>

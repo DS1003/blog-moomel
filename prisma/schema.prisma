@@ -42,6 +42,8 @@ model User {
   image         String?
   password      String?
   role          Role      @default(USER)
+  isActive      Boolean   @default(true)
+  notes         String?   @db.Text
   
   // Gamification
   xp            Int       @default(0)
@@ -55,6 +57,8 @@ model User {
   comments      Comment[]
   likes         Like[]
   bookmarks     Article[] @relation("BookmarkedArticles")
+  reports       Report[]  @relation("Reporter")
+  logs          ActivityLog[]
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -71,6 +75,7 @@ model VerificationToken {
 enum Role {
   USER
   ADMIN
+  MODERATOR
 }
 
 model Article {
@@ -81,6 +86,8 @@ model Article {
   content     String   @db.Text
   published   Boolean  @default(false)
   featured    Boolean  @default(false)
+  archived    Boolean  @default(false)
+  views       Int      @default(0)
   
   images      Image[]
   
@@ -90,6 +97,7 @@ model Article {
   comments    Comment[]
   likes       Like[]
   bookmarkedBy User[]  @relation("BookmarkedArticles")
+  reports     Report[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -139,6 +147,7 @@ model Comment {
   articleId String
   
   hidden    Boolean  @default(false)
+  reports   Report[]
   
   parentId  String?
   parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
@@ -170,6 +179,48 @@ model Badge {
   xpRequired  Int      @default(0)
   
   users       User[]   @relation("UserBadges")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  reason      String
+  status      String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
+  reporterId  String
+  
+  article     Article? @relation(fields: [articleId], references: [id])
+  articleId   String?
+  
+  comment     Comment? @relation(fields: [commentId], references: [id])
+  commentId   String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  action      String   // CREATE, UPDATE, DELETE, LOGIN, ETC
+  entity      String   // ARTICLE, USER, COMMENT, ETC
+  entityId    String?
+  details     String?  @db.Text
+  
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  
+  createdAt   DateTime @default(now())
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  published   Boolean  @default(false)
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
