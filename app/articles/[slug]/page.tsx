@@ -29,7 +29,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     }
 
     return (
-        <article className="min-h-screen pt-24 pb-20">
+        <article className="min-h-screen pb-20">
             {/* Article Header - Minimalist with Gradient */}
             <div className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-neutral-900">
                 {/* Abstract Background Shapes */}
