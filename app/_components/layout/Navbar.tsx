@@ -4,12 +4,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import Button from '../ui/Button';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  // Pages where the hero section is dark/image-heavy, requiring white text initially
+  const isDarkHeroPage = pathname === '/about' || pathname?.startsWith('/articles');
+
+  // Determine if we should use dark text (scrolled OR not on a dark hero page)
+  const useDarkText = isScrolled || !isDarkHeroPage;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,7 +29,7 @@ export default function Navbar() {
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${isScrolled
-        ? 'bg-white/80 backdrop-blur-xl shadow-sm py-3'
+        ? 'bg-white/90 backdrop-blur-xl shadow-sm py-3'
         : 'bg-transparent py-6'
         }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +40,7 @@ export default function Navbar() {
                 href="/"
                 className="flex items-center gap-3 group"
               >
-                <div className="relative w-10 h-10 lg:w-12 lg:h-12 overflow-hidden rounded-full border border-neutral-100 bg-white">
+                <div className="relative w-10 h-10 lg:w-12 lg:h-12 overflow-hidden rounded-full border border-neutral-100 bg-white shadow-sm">
                   <Image
                     src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
                     alt="Trésor Moomel Logo"
@@ -43,11 +50,13 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl lg:text-2xl font-serif font-bold text-neutral-900 leading-none group-hover:text-primary-600 transition-colors">
+                  <span className={`text-xl lg:text-2xl font-serif font-bold leading-none transition-colors ${useDarkText ? 'text-neutral-900 group-hover:text-primary-600' : 'text-white group-hover:text-primary-200'
+                    }`}>
                     Trésor Moomel
                   </span>
-                  <span className="text-[0.65rem] uppercase tracking-[0.2em] text-neutral-500 font-medium ml-0.5">
-                    Marketplace & Blog
+                  <span className={`text-[0.65rem] uppercase tracking-[0.2em] font-medium ml-0.5 transition-colors ${useDarkText ? 'text-neutral-500' : 'text-white/80'
+                    }`}>
+                    Blog
                   </span>
                 </div>
               </Link>
@@ -57,14 +66,21 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-8">
               {['Accueil', 'Articles', 'Catégories', 'À Propos'].map((item) => {
                 const href = item === 'Accueil' ? '/' : `/${item.toLowerCase().replace(' ', '-').replace('à-propos', 'about').replace('é', 'e')}`;
+                const isActive = pathname === href || (href !== '/' && pathname?.startsWith(href));
+
                 return (
                   <Link
                     key={item}
                     href={href}
-                    className="text-neutral-600 hover:text-neutral-900 font-medium text-sm tracking-wide transition-all relative group py-2"
+                    className={`font-medium text-sm tracking-wide transition-all relative group py-2 ${isActive
+                      ? (useDarkText ? 'text-primary-800 font-bold' : 'text-white font-bold')
+                      : (useDarkText ? 'text-neutral-600 hover:text-neutral-900' : 'text-white/90 hover:text-white')
+                      }`}
                   >
                     {item}
-                    <span className="absolute bottom-0 left-1/2 w-0 h-px bg-neutral-900 transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+                    <span className={`absolute bottom-0 left-1/2 h-px transition-all duration-300 transform -translate-x-1/2 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                      } ${useDarkText ? 'bg-primary-600' : 'bg-white'
+                      }`}></span>
                   </Link>
                 )
               })}
@@ -73,16 +89,22 @@ export default function Navbar() {
             {/* Right Side Actions */}
             <div className="hidden lg:flex items-center gap-6">
               {session?.user?.role === 'ADMIN' && (
-                <Link href="/admin" className="text-xs font-bold text-primary-600 border border-primary-200 px-3 py-1 rounded-full hover:bg-primary-50 transition-colors uppercase tracking-wider">
+                <Link href="/admin" className={`text-xs font-bold px-3 py-1 rounded-full border transition-colors uppercase tracking-wider ${useDarkText
+                  ? 'text-primary-600 border-primary-200 hover:bg-primary-50'
+                  : 'text-primary-200 border-primary-400/50 hover:bg-white/10'
+                  }`}>
                   Admin
                 </Link>
               )}
 
               {session ? (
-                <div className="flex items-center gap-4 pl-4 border-l border-neutral-200">
+                <div className={`flex items-center gap-4 pl-4 border-l ${useDarkText ? 'border-neutral-200' : 'border-white/20'
+                  }`}>
                   <div className="text-right hidden xl:block">
-                    <p className="text-sm font-bold text-neutral-900 leading-none">{session.user.name}</p>
-                    <p className="text-xs text-neutral-500">Membre</p>
+                    <p className={`text-sm font-bold leading-none transition-colors ${useDarkText ? 'text-neutral-900' : 'text-white'
+                      }`}>{session.user.name}</p>
+                    <p className={`text-xs transition-colors ${useDarkText ? 'text-neutral-500' : 'text-white/70'
+                      }`}>Membre</p>
                   </div>
                   <div className="relative group cursor-pointer">
                     <div className="w-10 h-10 rounded-full bg-neutral-100 border-2 border-white shadow-sm overflow-hidden">
@@ -94,7 +116,7 @@ export default function Navbar() {
                         </div>
                       )}
                     </div>
-                    {/* Dropdown for user (could be expanded) */}
+                    {/* Dropdown for user */}
                     <div className="absolute top-12 right-0 w-40 bg-white shadow-xl rounded-xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 text-left border border-neutral-100">
                       <Link href="/profil" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 rounded-lg mb-1 font-medium">
                         Mon Profil
@@ -110,7 +132,8 @@ export default function Navbar() {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Link href="/auth/signin" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
+                  <Link href="/auth/signin" className={`text-sm font-medium transition-colors ${useDarkText ? 'text-neutral-600 hover:text-neutral-900' : 'text-white hover:text-white/80'
+                    }`}>
                     Connexion
                   </Link>
                   <Link href="/auth/register" className="btn-primary py-2.5 px-6 text-sm shadow-lg shadow-primary-500/20">
@@ -124,7 +147,7 @@ export default function Navbar() {
             <div className="lg:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 text-neutral-800"
+                className={`p-2 transition-colors ${useDarkText ? 'text-neutral-800' : 'text-white'}`}
                 aria-label="Menu"
               >
                 <div className="w-8 flex flex-col items-end gap-1.5">
