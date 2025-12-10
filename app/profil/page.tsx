@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import ProfileCard from '@/app/_components/user/ProfileCard';
 import ArticleList from '@/app/_components/articles/ArticleList';
+import ScrollReveal from '@/app/_components/ui/ScrollReveal';
 
 // Mock user data if session is missing or for demo
 const mockUser = {
@@ -48,69 +49,98 @@ export default function ProfilePage() {
     } : mockUser;
 
     return (
-        <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 bg-neutral-50/50">
+        <div className="min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-[#F9F7F2]">
             <div className="max-w-7xl mx-auto">
+                <ScrollReveal animation="fade-up">
+                    <div className="mb-12">
+                        <h1 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-2">Mon Espace</h1>
+                        <p className="text-neutral-500">Suivez votre parcours et retrouvez vos inspirations.</p>
+                    </div>
+                </ScrollReveal>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column: Profile Card */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-24">
-                            <ProfileCard user={user} />
+                        <div className="sticky top-32 space-y-6">
+                            <ScrollReveal animation="slide-right" delay={0.1}>
+                                <ProfileCard user={user} className="bg-white rounded-[2rem] shadow-sm border border-neutral-100" />
+                            </ScrollReveal>
 
                             {/* Stats Summary */}
-                            <div className="mt-6 card p-6">
-                                <h3 className="font-bold text-neutral-800 mb-4">Statistiques</h3>
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-neutral-600">Articles lus</span>
-                                        <span className="font-bold text-primary-600">12</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-neutral-600">Commentaires</span>
-                                        <span className="font-bold text-primary-600">5</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-neutral-600">Likes donnés</span>
-                                        <span className="font-bold text-primary-600">24</span>
+                            <ScrollReveal animation="slide-right" delay={0.2}>
+                                <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-neutral-100">
+                                    <h3 className="font-serif text-lg font-bold text-neutral-900 mb-6 flex items-center gap-2">
+                                        <span className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 text-sm">📊</span>
+                                        Statistiques
+                                    </h3>
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center p-3 bg-neutral-50 rounded-xl">
+                                            <span className="text-sm text-neutral-600 font-medium">Articles lus</span>
+                                            <span className="font-bold text-primary-600 bg-white px-3 py-1 rounded-full shadow-sm">12</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 bg-neutral-50 rounded-xl">
+                                            <span className="text-sm text-neutral-600 font-medium">Commentaires</span>
+                                            <span className="font-bold text-primary-600 bg-white px-3 py-1 rounded-full shadow-sm">5</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 bg-neutral-50 rounded-xl">
+                                            <span className="text-sm text-neutral-600 font-medium">Likes donnés</span>
+                                            <span className="font-bold text-primary-600 bg-white px-3 py-1 rounded-full shadow-sm">24</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </ScrollReveal>
                         </div>
                     </div>
 
                     {/* Right Column: Content */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Welcome Banner */}
-                        <div className="bg-gradient-to-r from-primary-500 to-accent-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
-                            <div className="relative z-10">
-                                <h1 className="text-3xl font-bold mb-2">Bonjour, {user.name} !</h1>
-                                <p className="opacity-90">
-                                    Vous êtes à <span className="font-bold">750 XP</span> du niveau suivant.
-                                    Continuez à interagir pour débloquer le badge "Expert Beauté".
-                                </p>
-                            </div>
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                        </div>
+                        <ScrollReveal animation="fade-up" delay={0.3}>
+                            <div className="relative overflow-hidden rounded-[2rem] bg-neutral-900 text-white p-8 md:p-12 shadow-xl">
+                                {/* Abstract Shapes Background */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3"></div>
+                                <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent-500/20 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3"></div>
 
-                        {/* Tabs (Simplified) */}
-                        <div className="border-b border-neutral-200">
-                            <nav className="-mb-px flex space-x-8">
-                                <button className="border-b-2 border-primary-500 py-4 px-1 text-primary-600 font-medium">
+                                <div className="relative z-10">
+                                    <span className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-widest mb-4">
+                                        Niveau {user.level}
+                                    </span>
+                                    <h2 className="text-3xl md:text-4xl font-serif mb-4">
+                                        Ravi de vous revoir, <span className="text-primary-300 italic">{user.name}</span> !
+                                    </h2>
+                                    <p className="text-neutral-300 max-w-lg text-lg font-light leading-relaxed">
+                                        Vous êtes à <strong className="text-white font-medium">750 XP</strong> du niveau suivant.
+                                        Continuez à interagir pour débloquer le badge "Expert Beauté".
+                                    </p>
+                                </div>
+                            </div>
+                        </ScrollReveal>
+
+                        {/* Tabs (Simplified modern look) */}
+                        <ScrollReveal animation="fade-up" delay={0.4}>
+                            <div className="flex space-x-2 md:space-x-8 overflow-x-auto pb-2 scrollbar-hide">
+                                <button className="px-6 py-3 rounded-full bg-neutral-900 text-white font-medium text-sm whitespace-nowrap shadow-md transition-transform hover:scale-105">
                                     Articles sauvegardés
                                 </button>
-                                <button className="border-b-2 border-transparent py-4 px-1 text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 font-medium">
+                                <button className="px-6 py-3 rounded-full bg-white text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900 font-medium text-sm whitespace-nowrap border border-neutral-200 transition-all">
                                     Mon activité
                                 </button>
-                                <button className="border-b-2 border-transparent py-4 px-1 text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 font-medium">
+                                <button className="px-6 py-3 rounded-full bg-white text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900 font-medium text-sm whitespace-nowrap border border-neutral-200 transition-all">
                                     Paramètres
                                 </button>
-                            </nav>
-                        </div>
+                            </div>
+                        </ScrollReveal>
 
                         {/* Bookmarked Articles */}
-                        <div>
-                            <h2 className="text-xl font-bold text-neutral-800 mb-6">Articles sauvegardés</h2>
-                            <ArticleList articles={bookmarkedArticles} />
-                        </div>
+                        <ScrollReveal animation="fade-up" delay={0.5}>
+                            <div>
+                                <h2 className="text-2xl font-serif text-neutral-900 mb-6 flex items-center gap-3">
+                                    <span className="w-2 h-8 bg-primary-400 rounded-full"></span>
+                                    Articles sauvegardés
+                                </h2>
+                                <ArticleList articles={bookmarkedArticles} />
+                            </div>
+                        </ScrollReveal>
                     </div>
                 </div>
             </div>
