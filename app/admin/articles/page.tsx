@@ -52,7 +52,7 @@ export default function ArticlesPage() {
                     </div>
                 </ScrollReveal>
 
-                <ScrollReveal animation="slide-up" delay={0.2}>
+                <ScrollReveal animation="fade-up" delay={0.2}>
                     <div className="bg-white rounded-[2rem] shadow-sm border border-neutral-100 overflow-hidden">
                         {/* Toolbar / Filters (Mockup) */}
                         <div className="p-6 border-b border-neutral-100 flex gap-4 overflow-x-auto">
@@ -90,8 +90,8 @@ export default function ArticlesPage() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className={`px-3 py-1 inline-flex text-xs font-bold rounded-full uppercase tracking-wide ${article.published
-                                                            ? 'bg-green-100 text-green-700'
-                                                            : 'bg-yellow-100 text-yellow-700'
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : 'bg-yellow-100 text-yellow-700'
                                                         }`}>
                                                         {article.published ? 'Publié' : 'Brouillon'}
                                                     </span>
