@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import NextAuthSessionProvider from './_components/providers/SessionProvider';
 import Navbar from './_components/layout/Navbar';
 import Footer from './_components/layout/Footer';
+import ScrollToTop from './_components/ui/ScrollToTop';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -71,6 +72,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <ScrollToTop />
           </div>
         </NextAuthSessionProvider>
       </body>

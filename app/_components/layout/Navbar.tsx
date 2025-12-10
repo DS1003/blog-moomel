@@ -95,12 +95,17 @@ export default function Navbar() {
                       )}
                     </div>
                     {/* Dropdown for user (could be expanded) */}
-                    <button
-                      onClick={() => signOut()}
-                      className="absolute top-12 right-0 w-32 bg-white shadow-xl rounded-xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 text-left"
-                    >
-                      <span className="block px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">Déconnexion</span>
-                    </button>
+                    <div className="absolute top-12 right-0 w-40 bg-white shadow-xl rounded-xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 text-left border border-neutral-100">
+                      <Link href="/profil" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 rounded-lg mb-1 font-medium">
+                        Mon Profil
+                      </Link>
+                      <button
+                        onClick={() => signOut()}
+                        className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg font-medium"
+                      >
+                        Déconnexion
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -150,12 +155,33 @@ export default function Navbar() {
           <div className="w-12 h-1 bg-primary-100 rounded-full my-4"></div>
 
           {session ? (
-            <button
-              onClick={() => { signOut(); setIsMenuOpen(false); }}
-              className="text-lg font-medium text-red-500"
-            >
-              Se déconnecter
-            </button>
+            <div className="flex flex-col gap-4 items-center">
+              <div className="flex items-center gap-3 bg-neutral-100 px-4 py-2 rounded-full">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                  {session.user.image ? (
+                    <Image src={session.user.image} alt={session.user.name || "User"} fill className="object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-xs">
+                      {session.user.name?.[0] || 'U'}
+                    </div>
+                  )}
+                </div>
+                <span className="font-medium text-neutral-900">{session.user.name}</span>
+              </div>
+              <Link
+                href="/profil"
+                className="text-xl font-medium text-neutral-800 hover:text-primary-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Mon Profil
+              </Link>
+              <button
+                onClick={() => { signOut(); setIsMenuOpen(false); }}
+                className="text-lg font-medium text-red-500 hover:text-red-600"
+              >
+                Se déconnecter
+              </button>
+            </div>
           ) : (
             <div className="flex flex-col gap-4 mt-4">
               <Link href="/auth/signin" className="text-lg font-medium text-neutral-600" onClick={() => setIsMenuOpen(false)}>
