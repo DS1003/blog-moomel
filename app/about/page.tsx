@@ -9,7 +9,7 @@ export default function AboutPage() {
             <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src="/images/senegalese-woman-medium.png"
+                        src="/images/senegalese-modern-traditional.png"
                         alt="Moomel Story"
                         fill
                         className="object-cover"
@@ -33,7 +33,7 @@ export default function AboutPage() {
                 <div className="grid md:grid-cols-2 gap-16 items-center">
                     <div className="relative aspect-square rounded-[2rem] overflow-hidden shadow-2xl order-2 md:order-1">
                         <Image
-                            src="/images/senegalese-woman-medium.png"
+                            src="/images/senegalese-modern-traditional.png"
                             alt="Vision Moomel"
                             fill
                             className="object-cover"
@@ -46,6 +46,14 @@ export default function AboutPage() {
                     </div>
 
                     <div className="order-1 md:order-2">
+                        <div className="relative w-20 h-20 mb-6">
+                            <Image
+                                src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
+                                alt="Trésor Moomel Logo"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
                         <span className="text-primary-600 font-medium tracking-widest text-sm uppercase mb-2 block">
                             À propos de nous
                         </span>
