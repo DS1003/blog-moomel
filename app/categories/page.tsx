@@ -35,14 +35,14 @@ const categories = [
         slug: 'maquillage',
         name: 'Maquillage',
         description: 'Mise en beauté naturelle et respectueuse de la peau.',
-        image: '/images/senegalese-woman-light.png',
+        image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=800&auto=format&fit=crop',
         count: 10
     },
     {
         slug: 'bebe-maman',
         name: 'Bébé & Maman',
         description: 'Douceur et sécurité pour les peaux les plus délicates.',
-        image: '/images/senegalese-woman-dark.png',
+        image: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=800&auto=format&fit=crop',
         count: 4
     }
 ];
