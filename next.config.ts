@@ -37,12 +37,6 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'www.zigunyzoryda.org.uk',
-                port: '',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
                 hostname: 'github.com',
                 port: '',
                 pathname: '/**',

@@ -7,14 +7,14 @@ const categories = [
         slug: 'soins-visage',
         name: 'Soins Visage',
         description: 'Crèmes, sérums et masques naturels pour un teint éclatant.',
-        image: 'https://images.unsplash.com/photo-1596462502278-27bfdd403348?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop',
         count: 12
     },
     {
         slug: 'corps-bain',
         name: 'Corps & Bain',
         description: 'Rituels de bain et hydratation profonde pour le corps.',
-        image: 'https://images.unsplash.com/photo-1544367563-12123d8965cd?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800&auto=format&fit=crop',
         count: 8
     },
     {
@@ -35,14 +35,14 @@ const categories = [
         slug: 'maquillage',
         name: 'Maquillage',
         description: 'Mise en beauté naturelle et respectueuse de la peau.',
-        image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=800&auto=format&fit=crop',
+        image: '/images/senegalese-woman-light.png',
         count: 10
     },
     {
         slug: 'bebe-maman',
         name: 'Bébé & Maman',
         description: 'Douceur et sécurité pour les peaux les plus délicates.',
-        image: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=800&auto=format&fit=crop',
+        image: '/images/senegalese-woman-dark.png',
         count: 4
     }
 ];

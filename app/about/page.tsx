@@ -9,7 +9,7 @@ export default function AboutPage() {
             <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?q=80&w=2000&auto=format&fit=crop"
+                        src="/images/senegalese-woman-medium.png"
                         alt="Moomel Story"
                         fill
                         className="object-cover"
@@ -98,7 +98,7 @@ export default function AboutPage() {
                             {
                                 title: "Bien-être Familial",
                                 desc: "Toute personne qui s'intéresse à la santé et la beauté de son corps et celles de sa famille.",
-                                image: "https://images.unsplash.com/photo-1544367563-12123d8965cd?q=80&w=800&auto=format&fit=crop"
+                                image: "/images/senegalese-woman-medium.png"
                             }
                         ].map((item, idx) => (
                             <div key={idx} className="group relative h-[400px] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
