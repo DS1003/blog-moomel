@@ -46,8 +46,8 @@ export default function Hero() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
 
-                    {/* Text Content (Left - 8 Cols on LG) */}
-                    <div className="lg:col-span-8 text-center lg:text-left animate-fade-in order-2 lg:order-1 pt-8 lg:pt-0">
+                    {/* Text Content (Left - 9 Cols on LG for 13" laptop safety) */}
+                    <div className="lg:col-span-9 text-center lg:text-left animate-fade-in order-2 lg:order-1 pt-8 lg:pt-0">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-100 shadow-sm mb-6 lg:mb-8 animate-slide-up bg-opacity-80 backdrop-blur-sm">
                             <span className="flex h-2 w-2 relative">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
@@ -58,7 +58,7 @@ export default function Hero() {
                             </span>
                         </div>
 
-                        <div className="text-[clamp(2.5rem,8vw,8.5rem)] font-serif font-medium text-neutral-900 mb-6 lg:mb-8 leading-[1.05] tracking-tight">
+                        <div className="text-[clamp(2.5rem,7vw,8.5rem)] font-serif font-medium text-neutral-900 mb-6 lg:mb-8 leading-[1.05] tracking-tight">
                             <div className="whitespace-nowrap">
                                 <BlurText
                                     text={t.hero.title1}
@@ -66,6 +66,7 @@ export default function Hero() {
                                     animateBy="letters"
                                     className="mb-1 sm:mb-2 block origin-center"
                                     direction="top"
+                                    wrap={false}
                                 />
                             </div>
                             <div className="italic text-primary-600 my-1 sm:my-2 whitespace-nowrap">
@@ -75,6 +76,7 @@ export default function Hero() {
                                     animateBy="letters"
                                     className="inline-block"
                                     direction="bottom"
+                                    wrap={false}
                                 />
                             </div>
                             <div className="whitespace-nowrap">
@@ -84,6 +86,7 @@ export default function Hero() {
                                     animateBy="letters"
                                     className="block mt-1 sm:mt-2"
                                     direction="top"
+                                    wrap={false}
                                 />
                             </div>
                         </div>
@@ -121,8 +124,8 @@ export default function Hero() {
                         </div>
                     </div>
 
-                    {/* Image Composition (Right - 4 Cols on LG) */}
-                    <div className="lg:col-span-4 relative h-[450px] sm:h-[550px] md:h-[600px] lg:h-[700px] w-full order-1 lg:order-2 animate-fade-in sm:mt-8 lg:mt-0">
+                    {/* Image Composition (Right - 3 Cols on LG) */}
+                    <div className="lg:col-span-3 relative h-[450px] sm:h-[550px] md:h-[600px] lg:h-[700px] w-full order-1 lg:order-2 animate-fade-in sm:mt-8 lg:mt-0">
                         {/* Abstract background shape for images */}
                         <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] sm:w-[120%] h-[110%] sm:h-[120%] text-white opacity-40 z-0" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                             <path fill="currentColor" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,81.6,-46.6C91.4,-34.1,98.1,-19.2,95.8,-4.9C93.5,9.3,82.1,22.9,71.3,34.6C60.5,46.3,50.3,56.1,38.6,63.6C26.9,71.1,13.7,76.3,-0.6,77.3C-14.9,78.3,-28.7,75.1,-41.4,68.2C-54.1,61.3,-65.7,50.7,-73.9,37.9C-82.1,25.1,-86.9,10.1,-84.9,-3.9C-82.9,-17.9,-74.1,-30.9,-64.1,-42.2C-54.1,-53.5,-42.9,-63.1,-30.5,-71.4C-18.1,-79.7,-4.5,-86.7,6.8,-97.8L9.1,-79.2Z" transform="translate(100 100)" />

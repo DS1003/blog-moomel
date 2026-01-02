@@ -11,6 +11,7 @@ interface BlurTextProps {
     threshold?: number;
     rootMargin?: string;
     variant?: Variants;
+    wrap?: boolean;
 }
 
 export const BlurText = ({
@@ -22,6 +23,7 @@ export const BlurText = ({
     threshold = 0.1,
     rootMargin = '0px',
     variant,
+    wrap = true,
 }: BlurTextProps) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: threshold, margin: rootMargin as any });
@@ -46,7 +48,7 @@ export const BlurText = ({
 
     if (animateBy === 'letters') {
         return (
-            <div ref={ref} className={`${className} flex flex-wrap`}>
+            <div ref={ref} className={`${className} flex ${wrap ? 'flex-wrap' : 'flex-nowrap'}`}>
                 {letters.map((letter, index) => (
                     <motion.span
                         key={index}
@@ -68,7 +70,7 @@ export const BlurText = ({
     }
 
     return (
-        <div ref={ref} className={`${className} flex flex-wrap`}>
+        <div ref={ref} className={`${className} flex ${wrap ? 'flex-wrap' : 'flex-nowrap'}`}>
             {words.map((word, index) => (
                 <motion.span
                     key={index}
