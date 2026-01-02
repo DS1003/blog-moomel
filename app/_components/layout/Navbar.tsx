@@ -98,7 +98,7 @@ export default function Navbar() {
 
             {/* Right Side Actions */}
             <div className="hidden lg:flex items-center gap-6">
-              <LanguageSwitcher />
+              <LanguageSwitcher variant={useDarkText ? 'dark' : 'light'} />
 
               {session?.user?.role === 'ADMIN' && (
                 <Link href="/admin" className={`text-xs font-bold px-3 py-1 rounded-full border transition-colors uppercase tracking-wider ${useDarkText
@@ -157,7 +157,7 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
             <div className="lg:hidden flex items-center gap-4">
-              <LanguageSwitcher />
+              <LanguageSwitcher variant={useDarkText ? 'dark' : 'light'} />
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={`p-2 transition-colors ${useDarkText ? 'text-neutral-800' : 'text-white'}`}

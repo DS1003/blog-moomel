@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import HomePageView from "@/app/_components/pages/HomePageView";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   // Artificial delay for splash screen effect (3 seconds)
   await new Promise((resolve) => setTimeout(resolve, 3000));

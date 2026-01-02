@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/articles : liste des articles récents
 export async function GET() {
   const articles = await prisma.article.findMany({
