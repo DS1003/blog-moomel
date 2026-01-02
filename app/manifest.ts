@@ -10,9 +10,9 @@ export const viewport: Viewport = {
 
 export default function Manifest() {
     return {
-        name: 'Trésor Moomel',
+        name: 'Moomel',
         short_name: 'Moomel',
-        description: 'Cosmétique Gamifiée et Beauté Naturelle',
+        description: 'Beauté Naturelle, Authentique et Éthique',
         start_url: '/',
         display: 'standalone',
         background_color: '#FFFFFF',

@@ -1,37 +1,42 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '@/app/_components/providers/LanguageProvider';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
-    <footer className="relative bg-neutral-950 text-white overflow-hidden pt-20 pb-10">
+    <footer className="relative bg-neutral-950 text-white overflow-hidden pt-16 md:pt-20 pb-8 md:pb-10">
       {/* Organic Background Elements (Dark Mode Version) */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-900/20 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-accent-900/10 rounded-full blur-[100px] opacity-30 pointer-events-none"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary-900/20 rounded-full blur-[80px] md:blur-[100px] opacity-40 pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-accent-900/10 rounded-full blur-[80px] md:blur-[100px] opacity-30 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 lg:gap-8 mb-12 md:mb-16 text-center md:text-left">
 
           {/* Brand Section (4 Cols) */}
-          <div className="md:col-span-5 space-y-8">
+          <div className="md:col-span-5 space-y-6 md:space-y-8">
             <Link href="/" className="inline-flex items-center space-x-3 group">
-              <div className="relative w-12 h-12 transition-transform duration-500 group-hover:rotate-12">
+              <div className="relative w-10 h-10 md:w-12 md:h-12 transition-transform duration-500 group-hover:rotate-12">
                 <Image
                   src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
-                  alt="Trésor Moomel Logo"
+                  alt="Moomel Logo"
                   fill
                   className="object-contain"
+                  sizes="48px"
                 />
               </div>
-              <span className="text-3xl font-serif text-white tracking-tight group-hover:text-primary-200 transition-colors">
-                Trésor Moomel
+              <span className="text-2xl md:text-3xl font-serif text-white tracking-tight group-hover:text-primary-200 transition-colors">
+                Moomel
               </span>
             </Link>
-            <p className="text-neutral-400 text-lg leading-relaxed max-w-sm font-light">
-              L'alliance de la tradition et de l'innovation. <br />
-              <span className="text-primary-400/80">Votre rituel beauté quotidien, sublimé.</span>
+            <p className="text-neutral-400 text-base md:text-lg leading-relaxed max-w-sm font-light mx-auto md:mx-0">
+              {t.footer.desc}
             </p>
 
-            <div className="flex gap-4 pt-2">
+            <div className="flex justify-center md:justify-start gap-4 pt-2">
               {[
                 { label: 'Twitter', path: 'M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z' },
                 { label: 'Instagram', path: 'M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.297-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.807.875 1.297 2.026 1.297 3.323s-.49 2.448-1.297 3.323c-.875.807-2.026 1.297-3.323 1.297zm7.83-9.781c-.49 0-.928-.175-1.297-.49-.369-.315-.49-.753-.49-1.243 0-.49.121-.928.49-1.243.369-.315.807-.49 1.297-.49s.928.175 1.297.49c.369.315.49.753.49 1.243 0 .49-.121.928-.49 1.243-.369.315-.807.49-1.297.49z' },
@@ -40,10 +45,10 @@ export default function Footer() {
                 <a
                   key={index}
                   href="#"
-                  className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-primary-600 hover:border-primary-500 hover:scale-110 active:scale-95 transition-all duration-300"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-primary-600 hover:border-primary-500 hover:scale-110 active:scale-95 transition-all duration-300"
                   aria-label={social.label}
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d={social.path} />
                   </svg>
                 </a>
@@ -56,18 +61,18 @@ export default function Footer() {
 
           {/* Quick Links (3 Cols) */}
           <div className="md:col-span-3">
-            <h3 className="text-2xl font-serif text-white mb-8">Navigation</h3>
-            <ul className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-serif text-white mb-6 md:mb-8">{t.footer.navigation}</h3>
+            <ul className="space-y-3 md:space-y-4">
               {[
-                { label: 'Accueil', href: '/' },
-                { label: 'Articles', href: '/articles' },
-                { label: 'À propos', href: '/about' },
-                { label: 'Contact', href: '/contact' }
+                { label: t.nav.home, href: '/' },
+                { label: t.nav.articles, href: '/articles' },
+                { label: t.nav.about, href: '/about' },
+                { label: t.nav.contact, href: '/contact' }
               ].map((link, index) => (
                 <li key={index}>
-                  <Link href={link.href} className="group flex items-center text-neutral-400 hover:text-primary-200 transition-colors duration-300">
-                    <span className="w-0 h-px bg-primary-400 mr-0 transition-all duration-300 group-hover:w-4 group-hover:mr-3 opacity-0 group-hover:opacity-100"></span>
-                    <span className="text-lg font-light">{link.label}</span>
+                  <Link href={link.href} className="group flex items-center justify-center md:justify-start text-neutral-400 hover:text-primary-200 transition-colors duration-300">
+                    <span className="w-0 h-px bg-primary-400 mr-0 transition-all duration-300 group-hover:w-4 group-hover:mr-3 opacity-0 group-hover:opacity-100 hidden md:inline-block"></span>
+                    <span className="text-base md:text-lg font-light">{link.label}</span>
                   </Link>
                 </li>
               ))}
@@ -76,18 +81,18 @@ export default function Footer() {
 
           {/* Legal (3 Cols) */}
           <div className="md:col-span-3">
-            <h3 className="text-2xl font-serif text-white mb-8">Légal</h3>
-            <ul className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-serif text-white mb-6 md:mb-8">{t.footer.legal}</h3>
+            <ul className="space-y-3 md:space-y-4">
               {[
-                { label: 'Politique de confidentialité', href: '/privacy' },
-                { label: "Conditions d'utilisation", href: '/terms' },
-                { label: 'Cookies', href: '/cookies' },
-                { label: 'Mentions légales', href: '/mentions-legales' }
+                { label: t.footer.privacy, href: '/privacy' },
+                { label: t.footer.terms, href: '/terms' },
+                { label: t.footer.cookies, href: '/cookies' },
+                { label: t.footer.mentions, href: '/mentions-legales' }
               ].map((link, index) => (
                 <li key={index}>
-                  <Link href={link.href} className="group flex items-center text-neutral-400 hover:text-primary-200 transition-colors duration-300">
-                    <span className="w-0 h-px bg-primary-400 mr-0 transition-all duration-300 group-hover:w-4 group-hover:mr-3 opacity-0 group-hover:opacity-100"></span>
-                    <span className="text-lg font-light">{link.label}</span>
+                  <Link href={link.href} className="group flex items-center justify-center md:justify-start text-neutral-400 hover:text-primary-200 transition-colors duration-300">
+                    <span className="w-0 h-px bg-primary-400 mr-0 transition-all duration-300 group-hover:w-4 group-hover:mr-3 opacity-0 group-hover:opacity-100 hidden md:inline-block"></span>
+                    <span className="text-base md:text-lg font-light">{link.label}</span>
                   </Link>
                 </li>
               ))}
@@ -96,15 +101,15 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/5 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-neutral-500 font-light">
-          <p>
-            © {new Date().getFullYear()} Trésor Moomel. Tous droits réservés.
+        <div className="border-t border-white/5 mt-12 md:mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm text-neutral-500 font-light text-center">
+          <p className="mb-4 md:mb-0">
+            © {new Date().getFullYear()} Moomel. {t.footer.rights}
           </p>
-          <div className="flex items-center gap-6 mt-4 md:mt-0">
+          <div className="flex items-center justify-center gap-4 md:gap-6">
             <span className="hover:text-white transition-colors cursor-pointer">Sénégal 🇸🇳</span>
             <span className="w-1 h-1 rounded-full bg-neutral-700"></span>
-            <span className="flex items-center gap-2 hover:text-white transition-colors">
-              Fait avec <span className="text-red-500 animate-pulse">❤️</span>
+            <span className="flex items-center gap-2 hover:text-white transition-colors whitespace-nowrap">
+              {t.footer.made_with} <span className="text-red-500 animate-pulse">❤️</span>
             </span>
           </div>
         </div>

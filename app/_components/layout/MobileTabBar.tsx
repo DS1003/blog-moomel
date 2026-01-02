@@ -39,9 +39,9 @@ export default function MobileTabBar() {
     ];
 
     return (
-        <div className={`fixed bottom-0 left-0 right-0 z-50 lg:hidden transition-all duration-500 ease-in-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
+        <div className={`fixed bottom-0 left-0 right-0 z-50 lg:hidden transition-all duration-500 ease-in-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'}`}>
             {/* Glassmorphism Effect */}
-            <div className="bg-white/80 backdrop-blur-xl border-t border-white/50 px-6 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(0,0,0,0.03)] ring-1 ring-black/5">
+            <div className="bg-white/80 backdrop-blur-xl border-t border-white/50 px-6 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(0,0,0,0.03)] ring-1 ring-black/5 pointer-events-auto">
                 <div className="flex justify-between items-end relative">
                     {tabs.map((tab) => {
                         const isActive = pathname === tab.href || (tab.href !== '/' && pathname?.startsWith(tab.href));

@@ -31,11 +31,11 @@ export default function ScrollToTop() {
     }, []);
 
     return (
-        <div className="fixed bottom-8 right-8 z-[60]">
+        <div className="fixed bottom-8 right-8 z-[60] pointer-events-none">
             <button
                 type="button"
                 onClick={scrollToTop}
-                className={`bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+                className={`pointer-events-auto bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                     }`}
                 aria-label="Retour en haut"
             >

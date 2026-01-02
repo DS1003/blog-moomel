@@ -41,13 +41,13 @@ export default function SignInPage() {
                     <Link href="/" className="inline-block relative w-20 h-20 mb-4">
                         <Image
                             src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
-                            alt="Trésor Moomel Logo"
+                            alt="Moomel Logo"
                             fill
                             className="object-contain"
                         />
                     </Link>
                     <h2 className="text-3xl font-bold text-neutral-900">
-                        Bienvenue sur Trésor Moomel
+                        Bienvenue sur Moomel
                     </h2>
                     <p className="mt-2 text-neutral-600">
                         Connectez-vous pour gagner des XP et suivre votre progression beauté.

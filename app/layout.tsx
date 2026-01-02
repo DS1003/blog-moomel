@@ -6,6 +6,7 @@ import Navbar from './_components/layout/Navbar';
 import Footer from './_components/layout/Footer';
 import ScrollToTop from './_components/ui/ScrollToTop';
 import MobileTabBar from './_components/layout/MobileTabBar';
+import { LanguageProvider } from './_components/providers/LanguageProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,12 +21,12 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'Trésor Moomel | Cosmétique Gamifiée',
-  description: 'Découvrez l\'univers de la cosmétique gamifiée avec Trésor Moomel. Articles, conseils et innovations beauté.',
-  keywords: ['cosmétique', 'beauté', 'gamification', 'blog', 'skincare'],
-  authors: [{ name: 'Trésor Moomel Team' }],
-  creator: 'Trésor Moomel',
-  publisher: 'Trésor Moomel',
+  title: 'Moomel | Beauté Naturelle et Authentique',
+  description: 'Moomel est la référence pour les cosmétiques naturels et durables. Découvrez des produits authentiques, éthiques et une communauté engagée pour une beauté plus consciente.',
+  keywords: ['cosmétique naturelle', 'beauté authentique', 'soins bio', 'sénégal', 'éthique', 'responsable', 'moomel'],
+  authors: [{ name: 'Moomel Team' }],
+  creator: 'Moomel',
+  publisher: 'Moomel',
   formatDetection: {
     email: false,
     address: false,
@@ -33,17 +34,17 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   openGraph: {
-    title: 'Trésor Moomel | Cosmétique Gamifiée',
-    description: 'Découvrez l\'univers de la cosmétique gamifiée avec Trésor Moomel.',
+    title: 'Moomel | Beauté Naturelle et Authentique',
+    description: 'Offrez à votre peau la beauté qu\'elle mérite. Des produits cosmétiques naturels, authentiques et responsables.',
     url: '/',
-    siteName: 'Trésor Moomel',
+    siteName: 'Moomel',
     locale: 'fr_FR',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Trésor Moomel | Cosmétique Gamifiée',
-    description: 'Découvrez l\'univers de la cosmétique gamifiée avec Trésor Moomel.',
+    title: 'Moomel | Beauté Naturelle et Authentique',
+    description: 'Une beauté naturelle, authentique et éthique.',
   },
   robots: {
     index: true,
@@ -67,15 +68,17 @@ export default function RootLayout({
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen flex flex-col bg-gradient-to-br from-neutral-50 via-white to-primary-50/30">
         <NextAuthSessionProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-            <ScrollToTop />
-            <MobileTabBar />
-          </div>
+          <LanguageProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+              <ScrollToTop />
+              <MobileTabBar />
+            </div>
+          </LanguageProvider>
         </NextAuthSessionProvider>
       </body>
     </html>

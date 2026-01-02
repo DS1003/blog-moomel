@@ -1,11 +1,18 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import LikeButton from '@/app/_components/articles/LikeButton';
+import ShareButton from '@/app/_components/articles/ShareButton';
 import Button from '@/app/_components/ui/Button';
 import CommentSection from '@/app/_components/articles/CommentSection';
 import { prisma } from '@/lib/prisma';
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 async function getArticle(slug: string) {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
     const article = await prisma.article.findUnique({
         where: { slug },
         include: {
@@ -14,14 +21,26 @@ async function getArticle(slug: string) {
             tags: true,
             _count: {
                 select: { likes: true }
-            }
+            },
+            likes: userId ? {
+                where: { userId },
+                select: { userId: true }
+            } : false
         }
     });
-    return article;
+
+    if (!article) return null;
+
+    // Add isLiked property to the returned object
+    return {
+        ...article,
+        isLiked: article.likes ? article.likes.length > 0 : false
+    };
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
+    // We fetch inside the component now properly
     const article = await getArticle(slug);
 
     if (!article) {
@@ -74,7 +93,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         </div>
 
                         <div className="hidden md:block w-px h-8 bg-white/20"></div>
-                        <LikeButton initialLikes={article._count.likes} />
+                        <LikeButton articleId={article.id} initialLikes={article._count.likes} isLiked={article.isLiked} />
                     </div>
                 </div>
             </div>
@@ -135,10 +154,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             </p>
                         </div>
                         <div className="flex gap-4">
-                            <LikeButton initialLikes={article._count.likes} />
-                            <Button variant="secondary" size="sm">
-                                Partager
-                            </Button>
+                            <LikeButton articleId={article.id} initialLikes={article._count.likes} isLiked={article.isLiked} />
+                            <ShareButton title={article.title} text={article.excerpt || "Découvrez cet article sur Moomel !"} />
                         </div>
                     </div>
                 </div>

@@ -33,14 +33,26 @@ export default function RegisterPage() {
         }
 
         try {
-            // TODO: Implement registration logic via API
-            // const res = await fetch('/api/auth/register', { ... });
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
 
-            // For now, simulate success and redirect to login
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Une erreur est survenue");
+            }
+
+            // Success redirect
             router.push('/auth/signin?registered=true');
-        } catch (err) {
-            setError('Une erreur est survenue lors de l\'inscription');
+        } catch (err: any) {
+            setError(err.message || 'Une erreur est survenue lors de l\'inscription');
         } finally {
             setIsLoading(false);
         }
@@ -59,7 +71,7 @@ export default function RegisterPage() {
                         Créer un compte
                     </h2>
                     <p className="mt-2 text-sm text-neutral-600">
-                        Rejoignez la communauté Trésor Moomel
+                        Rejoignez la communauté Moomel
                     </p>
                 </div>
 

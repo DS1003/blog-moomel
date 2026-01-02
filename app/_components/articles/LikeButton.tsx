@@ -3,26 +3,48 @@
 import React, { useState } from 'react';
 
 interface LikeButtonProps {
+    articleId: string;
     initialLikes: number;
     isLiked?: boolean;
 }
 
-export default function LikeButton({ initialLikes, isLiked = false }: LikeButtonProps) {
+export default function LikeButton({ articleId, initialLikes, isLiked = false }: LikeButtonProps) {
     const [likes, setLikes] = useState(initialLikes);
     const [liked, setLiked] = useState(isLiked);
     const [isAnimating, setIsAnimating] = useState(false);
 
-    const handleLike = () => {
-        if (liked) {
-            setLikes(likes - 1);
-            setLiked(false);
-        } else {
-            setLikes(likes + 1);
-            setLiked(true);
+    const handleLike = async () => {
+        // Optimistic update
+        const newLikedState = !liked;
+        setLiked(newLikedState);
+        setLikes(prev => newLikedState ? prev + 1 : prev - 1);
+
+        if (newLikedState) {
             setIsAnimating(true);
             setTimeout(() => setIsAnimating(false), 1000);
+        }
 
-            // TODO: Call API to toggle like and award XP
+        try {
+            const res = await fetch(`/api/articles/${articleId}/like`, {
+                method: 'POST',
+            });
+
+            if (res.status === 401) {
+                // Not authorized: redirect to login
+                window.location.href = '/auth/signin';
+                return;
+            }
+
+            if (!res.ok) {
+                // Revert if error
+                setLiked(!newLikedState);
+                setLikes(prev => !newLikedState ? prev + 1 : prev - 1);
+            }
+        } catch (error) {
+            console.error('Error liking article:', error);
+            // Revert if error
+            setLiked(!newLikedState);
+            setLikes(prev => !newLikedState ? prev + 1 : prev - 1);
         }
     };
 

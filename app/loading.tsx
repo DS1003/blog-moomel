@@ -16,7 +16,7 @@ export default function Loading() {
                     <div className="relative w-full h-full rounded-full overflow-hidden border border-neutral-100">
                         <Image
                             src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
-                            alt="Trésor Moomel Logo"
+                            alt="Moomel Logo"
                             fill
                             className="object-contain p-2"
                             priority
@@ -26,7 +26,7 @@ export default function Loading() {
 
                 {/* Text */}
                 <h1 className="text-4xl md:text-5xl font-serif text-neutral-900 tracking-tight font-medium mb-3">
-                    Trésor Moomel
+                    Moomel
                 </h1>
                 <div className="h-px w-16 bg-primary-400 mb-3"></div>
                 <span className="text-neutral-500 uppercase tracking-[0.3em] text-xs font-medium">
