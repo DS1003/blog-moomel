@@ -40,7 +40,7 @@ export default function Navbar() {
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${isScrolled
         ? 'bg-white/90 backdrop-blur-xl shadow-sm py-3'
-        : 'bg-transparent py-6'
+        : 'bg-transparent md:py-6 py-4'
         }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
@@ -48,9 +48,9 @@ export default function Navbar() {
             <div className="flex items-center">
               <Link
                 href="/"
-                className="flex items-center gap-3 group"
+                className="flex items-center gap-2 md:gap-3 group"
               >
-                <div className="relative w-10 h-10 lg:w-12 lg:h-12 overflow-hidden rounded-full border border-neutral-100 bg-white shadow-sm">
+                <div className="relative w-9 h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 overflow-hidden rounded-full border border-neutral-100 bg-white shadow-sm">
                   <Image
                     src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
                     alt="Moomel Logo"
@@ -60,11 +60,11 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className={`text-xl lg:text-2xl font-serif font-bold leading-none transition-colors ${useDarkText ? 'text-neutral-900 group-hover:text-primary-600' : 'text-white group-hover:text-primary-200'
+                  <span className={`text-lg md:text-xl lg:text-2xl font-serif font-bold leading-none transition-colors ${useDarkText ? 'text-neutral-900 group-hover:text-primary-600' : 'text-white group-hover:text-primary-200'
                     }`}>
                     Moomel
                   </span>
-                  <span className={`text-[0.65rem] uppercase tracking-[0.2em] font-medium ml-0.5 transition-colors ${useDarkText ? 'text-neutral-500' : 'text-white/80'
+                  <span className={`text-[0.55rem] md:text-[0.65rem] uppercase tracking-[0.2em] font-medium ml-0.5 transition-colors hidden xs:block ${useDarkText ? 'text-neutral-500' : 'text-white/80'
                     }`}>
                     Blog
                   </span>
