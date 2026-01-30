@@ -1,9 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export const dynamic = 'force-dynamic';
+
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const { id: paramId } = await props.params;
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== "ADMIN") {
         return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
@@ -11,7 +14,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
     try {
         const body = await req.json();
-        // Remove id and other immutable fields from body if present
         const { id, _count, createdAt, updatedAt, ...updateData } = body;
 
         if (updateData.xpRequired) {
@@ -19,7 +21,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const badge = await prisma.badge.update({
-            where: { id: params.id },
+            where: { id: paramId },
             data: updateData
         });
 
@@ -30,7 +32,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const { id: paramId } = await props.params;
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== "ADMIN") {
         return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
@@ -38,7 +41,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
     try {
         await prisma.badge.delete({
-            where: { id: params.id }
+            where: { id: paramId }
         });
 
         return NextResponse.json({ success: true });
