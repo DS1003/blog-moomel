@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Explicit check for Cloudinary configuration
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    const hasUrl = !!process.env.CLOUDINARY_URL;
+    const hasKeys = process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET;
+
+    if (!hasUrl && !hasKeys) {
         console.error("Cloudinary config missing during upload request");
         return NextResponse.json({
             error: "Configuration serveur manquante (Clés Cloudinary)",

@@ -86,60 +86,46 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Target Audience / Values Section */}
+            {/* Share / What I share Section */}
             <section className="py-16 md:py-24 bg-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-primary-50/50 -skew-x-12 transform translate-x-20 hidden md:block"></div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <ScrollReveal animation="fade-up">
                         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-                            <h2 className="text-3xl md:text-5xl font-serif text-neutral-900 mb-4 md:mb-6">{t.about.target_title}</h2>
-                            <div className="w-16 md:w-24 h-1 bg-primary-300 mx-auto mb-6 md:mb-8"></div>
-                            <p className="text-lg md:text-xl text-neutral-600 leading-relaxed font-light">
-                                {t.about.target_desc}
-                            </p>
+                            <h2 className="text-3xl md:text-5xl font-serif text-neutral-900 mb-4 md:mb-6">{t.about.share_title}</h2>
+                            <div className="w-16 md:w-24 h-1 bg-primary-300 mx-auto"></div>
                         </div>
                     </ScrollReveal>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {[
-                            {
-                                title: t.about.target_items[0].title,
-                                desc: t.about.target_items[0].desc,
-                                image: "/images/senegalese-woman-dark.png"
-                            },
-                            {
-                                title: t.about.target_items[1].title,
-                                desc: t.about.target_items[1].desc,
-                                image: "/images/senegalese-woman-light.png"
-                            },
-                            {
-                                title: t.about.target_items[2].title,
-                                desc: t.about.target_items[2].desc,
-                                image: "/images/senegalese-woman-medium.png"
-                            }
-                        ].map((item, idx) => (
-                            <ScrollReveal key={idx} delay={idx * 0.1} animation="zoom-in">
-                                <div className="group relative h-[350px] md:h-[450px] rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                                    <Image
-                                        src={item.image}
-                                        alt={item.title}
-                                        fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                                    <div className="absolute bottom-0 left-0 p-6 md:p-8 transform transition-transform duration-300">
-                                        <h3 className="text-xl md:text-2xl font-serif text-white mb-2 md:mb-3">{item.title}</h3>
-                                        <p className="text-sm md:text-base text-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 line-clamp-3">
-                                            {item.desc}
-                                        </p>
+                    <div className="grid sm:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
+                        {(t.about.share_items || []).map((item: string, idx: number) => (
+                            <ScrollReveal key={idx} delay={idx * 0.1} animation="fade-up">
+                                <div className="bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 hover:border-primary-200 transition-all duration-300 group">
+                                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-primary-500 font-bold mb-6 group-hover:scale-110 transition-transform">
+                                        <span className="text-xl">✓</span>
                                     </div>
+                                    <p className="text-neutral-700 leading-relaxed font-medium">
+                                        {item}
+                                    </p>
                                 </div>
                             </ScrollReveal>
                         ))}
                     </div>
                 </div>
+            </section>
+
+            {/* Welcome / Philosophy Section */}
+            <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+                <ScrollReveal animation="fade-up">
+                    <div className="relative inline-block mb-8">
+                        <span className="text-6xl md:text-8xl font-serif text-primary-100 absolute -top-10 -left-10 select-none">“</span>
+                        <h2 className="text-3xl md:text-5xl font-serif text-neutral-900 relative z-10">{t.about.welcome_title}</h2>
+                    </div>
+                    <p className="text-xl md:text-2xl text-neutral-600 leading-relaxed font-light italic max-w-3xl mx-auto">
+                        {t.about.welcome_text}
+                    </p>
+                </ScrollReveal>
             </section>
 
             {/* CTA Section */}

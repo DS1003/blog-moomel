@@ -1,21 +1,30 @@
 import { prisma } from "@/lib/prisma";
 import HomePageView from "@/app/_components/pages/HomePageView";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function HomePage() {
-  // Artificial delay for splash screen effect (3 seconds)
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   let articles = [];
   try {
     articles = await prisma.article.findMany({
       take: 3,
       orderBy: { createdAt: 'desc' },
-      include: {
-        author: true,
-        images: true,
-        _count: { select: { likes: true, comments: true } }
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        createdAt: true,
+        author: {
+          select: {
+            name: true,
+          }
+        },
+        images: {
+          select: {
+            url: true,
+          }
+        },
       },
     });
   } catch (error) {

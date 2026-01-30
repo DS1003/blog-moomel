@@ -14,6 +14,7 @@ export async function GET() {
       images: true,
       likes: true,
       comments: true,
+      category: true,
     },
     orderBy: { createdAt: 'desc' },
   });
@@ -26,15 +27,13 @@ const articleSchema = z.object({
   content: z.string().min(20),
   published: z.boolean().optional(),
   imageUrl: z.string().url().optional().or(z.literal('')),
+  categoryId: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  // Strict Admin Check
   if (!session || session.user?.role !== "ADMIN") {
-    // For development, we might want to allow it if easy testing is needed, 
-    // but the requirement says "Login Admin sécurisé".
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
 
@@ -53,7 +52,6 @@ export async function POST(req: NextRequest) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)+/g, '');
 
-  // Ensure slug is unique
   const existing = await prisma.article.findUnique({ where: { slug } });
   const finalSlug = existing ? `${slug}-${Date.now()}` : slug;
 
@@ -64,8 +62,9 @@ export async function POST(req: NextRequest) {
         slug: finalSlug,
         excerpt: data.excerpt,
         content: data.content,
-        author: { connect: { email: session.user?.email! } }, // Connect via email from session
+        author: { connect: { email: session.user?.email! } },
         published: data.published || false,
+        category: data.categoryId ? { connect: { id: data.categoryId } } : undefined,
         images: data.imageUrl ? {
           create: { url: data.imageUrl }
         } : undefined,

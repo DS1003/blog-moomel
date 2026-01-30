@@ -8,35 +8,37 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const articleId = searchParams.get('articleId');
 
-  if (!articleId) {
-    return NextResponse.json({ error: "Article ID manquant" }, { status: 400 });
-  }
-
   try {
+    const whereClause: any = {};
+    if (articleId) {
+      whereClause.articleId = articleId;
+      whereClause.hidden = false; // Public view hides hidden comments
+      whereClause.parentId = null; // Public view shows threads
+    }
+    // If no articleId is provided, we assume it's the admin dashboard asking for everything (including hidden, reports, etc.)
+
     const comments = await prisma.comment.findMany({
-      where: {
-        articleId,
-        parentId: null, // Fetch top-level comments first
-        hidden: false, // Don't show hidden comments
-      },
+      where: whereClause,
       include: {
         author: {
-          select: { id: true, name: true, image: true, role: true }
+          select: { id: true, name: true, image: true, role: true, email: true }
+        },
+        article: {
+          select: { title: true, slug: true }
         },
         replies: {
           include: {
-            author: {
-              select: { id: true, name: true, image: true, role: true }
-            }
-          },
-          orderBy: { createdAt: 'asc' }
+            author: { select: { name: true } }
+          }
         }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      take: 50 // Limit for safety
     });
 
     return NextResponse.json(comments);
   } catch (error) {
+    console.error("Error fetching comments:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

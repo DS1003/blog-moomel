@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ArticleCard from "@/app/_components/articles/ArticleCard";
 import { dictionaries } from "@/app/_i18n/dictionaries";
+import { motion } from "framer-motion";
 
 // Define the Article type here or import it if shared
 type Article = {
@@ -98,16 +99,76 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                             </div>
                         </ScrollReveal>
 
-                        <ScrollReveal animation="slide-left" delay={0.2}>
-                            <div className="relative aspect-square rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-2xl group mt-8 lg:mt-0">
-                                <Image
-                                    src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1200&auto=format&fit=crop"
-                                    alt="Ingrédients Naturels"
-                                    fill
-                                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                                    sizes="(max-width: 1024px) 100vw, 600px"
-                                />
-                                <div className="absolute inset-0 bg-primary-900/10 group-hover:bg-transparent transition-colors"></div>
+                        <ScrollReveal animation="fade-in" delay={0.2} className="h-full">
+                            <div className="relative h-[600px] sm:h-[700px] lg:h-[750px] w-full mt-8 lg:mt-0">
+                                {/* Subtle background glow */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary-50/10 rounded-full blur-[120px] z-0"></div>
+
+                                <div className="relative z-10 w-full h-full grid grid-cols-12 grid-rows-12 gap-4 md:gap-5">
+                                    <div className="col-span-8 row-span-7 relative rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-xl">
+                                        <Image
+                                            src="https://www.mycosmetik.fr/img/cms/beurre-karite-visage.jpg"
+                                            alt="Beurre de Karité"
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 640px) 70vw, (max-width: 1024px) 50vw, 33vw"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                        <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md px-5 py-2.5 rounded-2xl shadow-lg">
+                                            <p className="text-[11px] font-bold text-primary-600 uppercase tracking-[0.2em] mb-0.5">Pur & Brut</p>
+                                            <h4 className="text-sm sm:text-base font-serif text-neutral-900">Karité de Casamance</h4>
+                                        </div>
+                                    </div>
+
+                                    {/* Baobab Oil - Tall Right */}
+                                    <div className="col-span-4 row-span-8 relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-lg mt-12">
+                                        <Image
+                                            src="https://www.alguoa.com/img/cms/comptoir-des-huiles/huiles/huile-vegetale-baobab-bio-comptoir-des-huiles-590x700.jpg"
+                                            alt="Huile de Baobab"
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 640px) 30vw, (max-width: 1024px) 20vw, 15vw"
+                                        />
+                                        <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl text-[10px] font-bold text-neutral-800 text-center border border-white/20">
+                                            Huile de Baobab
+                                        </div>
+                                    </div>
+
+                                    {/* Moringa - Bottom Left */}
+                                    <div className="col-span-5 row-span-5 relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-lg -mt-6">
+                                        <Image
+                                            src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&q=80&w=600"
+                                            alt="Moringa"
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 640px) 40vw, (max-width: 1024px) 30vw, 20vw"
+                                        />
+                                        <div className="absolute top-4 right-4 animate-pulse">
+                                            <div className="w-3 h-3 bg-primary-500 rounded-full shadow-[0_0_10px_rgba(184,134,54,0.6)]"></div>
+                                        </div>
+                                        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-bold text-neutral-800 border border-white/20">
+                                            Moringa Purifiant
+                                        </div>
+                                    </div>
+
+                                    {/* Bissap - Bottom Right */}
+                                    <div className="col-span-7 row-span-4 relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-lg">
+                                        <Image
+                                            src="https://aromanature.ch/wp-content/uploads/2018/02/HUILE-DHIBISCUS-scaled.jpg"
+                                            alt="Bissap"
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 40vw, 25vw"
+                                        />
+                                        <div className="absolute inset-0 bg-neutral-900/5"></div>
+                                        <div className="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-md">
+                                            Éclat
+                                        </div>
+                                        <div className="absolute bottom-5 left-5 bg-white/95 backdrop-blur-md px-5 py-2 rounded-xl border border-white/50 shadow-sm">
+                                            <h5 className="text-[11px] sm:text-xs font-serif text-neutral-900">Huile de Bissap</h5>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </ScrollReveal>
                     </div>
@@ -163,7 +224,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                     alt="Femme Sénégalaise Moomel"
                                     fill
                                     className="object-cover object-center lg:object-left hover:scale-105 transition-transform duration-1000"
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                    sizes="(max-width: 1024px) 100vw, 40vw"
                                 />
                             </div>
                         </div>
@@ -214,6 +275,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                 fill
                                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                 sizes="(max-width: 768px) 100vw, 33vw"
+                                loading="lazy"
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
                             <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 text-white p-2">
@@ -231,6 +293,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                 fill
                                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                 sizes="(max-width: 768px) 100vw, 33vw"
+                                loading="lazy"
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
                             <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 text-white p-2">

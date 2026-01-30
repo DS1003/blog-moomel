@@ -70,26 +70,28 @@ export const dictionaries = {
             ]
         },
         about: {
-            hero_title: 'La naissance d’un rêve',
-            hero_subtitle: "L’essence de la beauté naturelle, à portée de main.",
-            vision_tag: 'Vision',
-            vision_title: 'Notre Vision',
+            hero_title: 'Retour à l’essentiel',
+            hero_subtitle: "Une beauté plus consciente, plus naturelle, plus authentique.",
+            vision_tag: 'Notre Esprit',
+            vision_title: 'L’Appel du Retour',
             about_us: 'À propos de Moomel',
-            main_title: "Démocratiser la beauté",
-            main_subtitle: "naturelle et éthique.",
-            story_p1: "Notre mission est de démocratiser l'accès à des produits cosmétiques naturels, éthiques et durables tout en soutenant une économie circulaire et en favorisant les acteurs locaux. Nous nous engageons à offrir une plateforme où transparence, qualité et respect de la nature se rencontrent.",
-            story_p2: "Notre aventure a commencé avec une mission claire : réunir sur une même plateforme les producteurs et créateurs passionnés qui partagent des valeurs communes d’authenticité, de qualité et de respect pour la nature. Nous voulons donner une voix aux petites entreprises locales qui subliment les ressources naturelles.",
-            target_title: "Pour une Beauté Authentique",
-            target_desc: "Moomel s'adresse à celles et ceux qui préfèrent les ingrédients simples et naturels, soucieux de la qualité, de l'origine des produits et de l'impact social de leurs achats.",
-            target_items: [
-                { title: "Consommateurs", desc: "En quête de produits de niche exclusifs, de durabilité et d'une expérience personnalisée." },
-                { title: "Producteurs", desc: "Petites et moyennes entreprises, créateurs locaux partageant nos valeurs d'éthique et de transparence." },
-                { title: "Communauté", desc: "Des passionnés qui veulent redéfinir les standards de la beauté ensemble." }
+            main_title: "Partager une autre",
+            main_subtitle: "vision de la beauté.",
+            story_p1: "Le blog Moomel est né d'une envie simple mais profonde: revenir à une beauté plus consciente, plus naturelle, plus authentique. Ce blog est ainsi un espace pour partager une autre vision de la beauté; une beauté qui honore le corps et respecte la nature.",
+            story_p2: "C’est une invitation à l'écoute de son corps, à la redécouverte de la puissance des choses simples, au ralentissement, à la réconciliation avec le temps. Pour résumer, c’est un appel au retour à l'essentiel.",
+            share_title: "À travers ce blog, je partage :",
+            share_items: [
+                "Des informations claires et honnêtes sur les cosmétiques naturels",
+                "Des conseils pour comprendre les ingrédients et faire des choix éclairés",
+                "Des rituels de beauté simples, respectueux et sensoriels",
+                "Une approche bienveillante de la peau, loin des diktats et de la perfection"
             ],
-            cta_title: "Naturellement beau",
-            cta_desc: "Nous permettons aux consommateurs de faire des choix éclairés et responsables, créateurs de valeur pour les communautés locales.",
-            cta_explore: "Découvrir la sélection",
-            cta_seller: "Rejoindre en tant que marque"
+            welcome_title: "Bienvenue dans cet espace",
+            welcome_text: "Si toi aussi, tu cherches un espace où déposer, respirer, te retrouver, je te souhaite la bienvenue. Avance à ton rythme, car la beauté n’est pas une performance, c’est un chemin.",
+            cta_title: "Prêt à commencer le chemin ?",
+            cta_desc: "Découvrez nos articles et rituels pour une beauté authentique.",
+            cta_explore: "Découvrir le blog",
+            cta_seller: "S'inscrire à la newsletter"
         },
         articles_page: {
             tag: "Blog & Conseils",
@@ -214,26 +216,28 @@ export const dictionaries = {
             ]
         },
         about: {
-            hero_title: 'The birth of a dream',
-            hero_subtitle: "The essence of natural beauty, within reach.",
-            vision_tag: 'Vision',
-            vision_title: 'Our Vision',
+            hero_title: 'Return to Essentials',
+            hero_subtitle: "A more conscious, natural, and authentic beauty.",
+            vision_tag: 'Our Spirit',
+            vision_title: 'The Call to Return',
             about_us: 'About Moomel',
-            main_title: "Democratizing Beauty",
-            main_subtitle: "natural and ethical.",
-            story_p1: "Our mission is to democratize access to natural, ethical and sustainable cosmetic products while supporting a circular economy and promoting local actors. We are committed to offering a platform where transparency, quality and respect for nature meet.",
-            story_p2: "Our adventure began with a clear mission: to bring together on the same platform passionate producers and creators who share common values of authenticity, quality and respect for nature. We want to give a voice to small local businesses that sublimate natural resources.",
-            target_title: "For Authentic Beauty",
-            target_desc: "Moomel is for those who prefer simple and natural ingredients, concerned about quality, product origin and the social impact of their purchases.",
-            target_items: [
-                { title: "Consumers", desc: "Looking for exclusive niche products, sustainability and a personalized experience." },
-                { title: "Producers", desc: "Small and medium businesses, local creators sharing our values of ethics and transparency." },
-                { title: "Community", desc: "Enthusiasts who want to redefine beauty standards together." }
+            main_title: "Sharing another",
+            main_subtitle: "vision of beauty.",
+            story_p1: "The Moomel blog was born from a simple but deep desire: to return to a more conscious, natural, and authentic beauty. This blog is thus a space to share another vision of beauty; a beauty that honors the body and respects nature.",
+            story_p2: "It's an invitation to listen to your body, to rediscover the power of simple things, to slow down, and to reconcile with time. In short, it's a call to return to essentials.",
+            share_title: "Through this blog, I share:",
+            share_items: [
+                "Clear and honest information on natural cosmetics",
+                "Advice for understanding ingredients and making informed choices",
+                "Simple, respectful, and sensory beauty rituals",
+                "A caring approach to skin, far from dictates and perfection"
             ],
-            cta_title: "Naturally beautiful",
-            cta_desc: "We enable consumers to make informed and responsible choices, creating value for local communities.",
-            cta_explore: "Discover selection",
-            cta_seller: "Join as a brand"
+            welcome_title: "Welcome to this space",
+            welcome_text: "If you too are looking for a space to rest, breathe, and find yourself, I welcome you. Go at your own pace, because beauty is not a performance, it's a journey.",
+            cta_title: "Ready to start the journey?",
+            cta_desc: "Discover our articles and rituals for an authentic beauty.",
+            cta_explore: "Discover the blog",
+            cta_seller: "Subscribe to newsletter"
         },
         articles_page: {
             tag: "Blog & Tips",

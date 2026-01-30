@@ -16,7 +16,8 @@ import {
     Bold,
     Italic,
     List,
-    Link as LinkIcon
+    Link as LinkIcon,
+    Image as ImageIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -25,9 +26,11 @@ interface Category {
     name: string;
 }
 
-export default function NewArticlePage() {
+export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = React.use(params);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
     const [parsingPdf, setParsingPdf] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -46,22 +49,40 @@ export default function NewArticlePage() {
     });
 
     useEffect(() => {
-        const fetchCategories = async () => {
+        const init = async () => {
             try {
-                const res = await fetch('/api/categories');
-                if (res.ok) {
-                    const data = await res.json();
-                    setCategories(data);
-                    if (data.length > 0) {
-                        setFormData(prev => ({ ...prev, categoryId: data[0].id }));
-                    }
+                // Fetch Article
+                const articleRes = await fetch(`/api/articles/${id}`);
+                if (!articleRes.ok) {
+                    alert('Article introuvable');
+                    router.push('/admin/articles');
+                    return;
                 }
+                const articleData = await articleRes.json();
+
+                // Fetch Categories
+                const catRes = await fetch('/api/categories');
+                const catData = await catRes.json();
+                setCategories(catData);
+
+                setFormData({
+                    title: articleData.title || '',
+                    excerpt: articleData.excerpt || '',
+                    content: articleData.content || '',
+                    imageUrl: articleData.images?.[0]?.url || articleData.imageUrl || '',
+                    published: articleData.published || false,
+                    categoryId: articleData.categoryId || (catData.length > 0 ? catData[0].id : '')
+                });
+
             } catch (error) {
-                console.error("Failed to fetch categories", error);
+                console.error(error);
+            } finally {
+                setFetching(false);
             }
         };
-        fetchCategories();
-    }, []);
+
+        if (id) init();
+    }, [id, router]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -85,6 +106,7 @@ export default function NewArticlePage() {
 
         setFormData(prev => ({ ...prev, content: newValue }));
 
+        // Restore focus and selection
         setTimeout(() => {
             textarea.focus();
             textarea.setSelectionRange(start + before.length, end + before.length);
@@ -96,8 +118,8 @@ export default function NewArticlePage() {
         setLoading(true);
 
         try {
-            const res = await fetch('/api/articles', {
-                method: 'POST',
+            const res = await fetch(`/api/articles/${id}`, {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
@@ -107,7 +129,7 @@ export default function NewArticlePage() {
                 router.refresh();
             } else {
                 const error = await res.json();
-                alert(`Erreur: ${error.error || 'Impossible de créer l\'article'}`);
+                alert(`Erreur: ${error.error || 'Impossible de modifier l\'article'}`);
             }
         } catch (error) {
             console.error(error);
@@ -122,12 +144,21 @@ export default function NewArticlePage() {
         visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
     };
 
+    if (fetching) {
+        return (
+            <div className="min-h-[60vh] flex items-center justify-center flex-col gap-4">
+                <div className="w-10 h-10 border-4 border-neutral-100 border-t-neutral-900 rounded-full animate-spin"></div>
+                <p className="text-xs font-black uppercase tracking-widest text-neutral-400">Chargement de l'éditeur...</p>
+            </div>
+        );
+    }
+
     return (
         <motion.div
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="max-w-6xl mx-auto space-y-8"
+            className="w-full px-4 md:px-8 space-y-8"
         >
             {/* Page Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -139,8 +170,8 @@ export default function NewArticlePage() {
                         <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                         <span className="text-xs font-black uppercase tracking-widest">Retour aux articles</span>
                     </button>
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mb-2">Nouvelle Création</h1>
-                    <p className="text-neutral-500 font-medium">Capturez l'essence de la beauté Moomel dans cet article.</p>
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mb-2">Modifier l'Article</h1>
+                    <p className="text-neutral-500 font-medium">Affinez votre contenu pour la perfection.</p>
                 </div>
                 <div className="flex gap-3">
                     <button
@@ -159,12 +190,12 @@ export default function NewArticlePage() {
                         {loading ? (
                             <>
                                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span>Publication...</span>
+                                <span>Enregistrement...</span>
                             </>
                         ) : (
                             <>
                                 <Save size={18} />
-                                <span>Publier l'article</span>
+                                <span>Enregistrer les modifications</span>
                             </>
                         )}
                     </button>
@@ -179,34 +210,29 @@ export default function NewArticlePage() {
                     {/* Header Input Area */}
                     <div className="space-y-8">
                         <div>
-                            <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em] mb-4">Identité de l'article</label>
+                            <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em] mb-4">Titre</label>
                             <input
                                 type="text"
                                 name="title"
                                 required
                                 value={formData.title}
                                 onChange={handleChange}
-                                placeholder="Donnez un titre puissant et évocateur..."
+                                placeholder="Titre de l'article..."
                                 className="w-full px-0 py-4 bg-transparent border-b-2 border-neutral-50 focus:border-primary-500 transition-all outline-none font-serif text-3xl md:text-4xl text-neutral-900 placeholder:text-neutral-200"
                             />
                         </div>
 
                         <div className="space-y-4">
-                            <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Accroche Émotionnelle (Excerpt)</label>
+                            <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Accroche (Excerpt)</label>
                             <textarea
                                 name="excerpt"
                                 required
                                 rows={2}
                                 value={formData.excerpt}
                                 onChange={handleChange}
-                                placeholder="Quelques phrases pour séduire vos lectrices dès le premier coup d'œil..."
+                                placeholder="Résumé court..."
                                 className="w-full px-5 py-4 bg-neutral-50/50 border border-neutral-100 rounded-2xl focus:bg-white focus:border-primary-300 transition-all outline-none font-medium text-sm md:text-md text-neutral-700 leading-relaxed resize-none"
                             />
-                            <div className="flex justify-end">
-                                <span className={`text-[9px] font-black uppercase tracking-widest ${formData.excerpt.length > 280 ? 'text-rose-500' : 'text-neutral-300'}`}>
-                                    {formData.excerpt.length} / 300
-                                </span>
-                            </div>
                         </div>
                     </div>
 
@@ -215,7 +241,7 @@ export default function NewArticlePage() {
                     {/* Editor Content Area */}
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Cœur de l'Article</label>
+                            <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Contenu</label>
 
                             {/* Toolbar */}
                             <div className="flex items-center gap-1 bg-neutral-50 rounded-xl p-1 border border-neutral-100">
@@ -244,6 +270,7 @@ export default function NewArticlePage() {
                             </div>
                         </div>
 
+                        {/* Hidden Inputs */}
                         <input ref={pdfInputRef} type="file" accept=".pdf" className="hidden" onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (!file) return;
@@ -272,11 +299,11 @@ export default function NewArticlePage() {
                                 ref={contentRef}
                                 name="content"
                                 required
-                                rows={18}
+                                rows={20}
                                 value={formData.content}
                                 onChange={handleChange}
-                                placeholder="L'histoire commence ici..."
-                                className="w-full px-8 py-8 bg-neutral-50/30 border-2 border-dashed border-neutral-100 rounded-[2.5rem] focus:bg-white focus:border-primary-300 focus:border-solid transition-all outline-none font-serif text-lg leading-[1.8] text-neutral-800"
+                                placeholder="Écrivez votre article..."
+                                className="w-full px-8 py-8 bg-neutral-50/30 border-2 border-dashed border-neutral-100 rounded-[2.5rem] focus:bg-white focus:border-primary-300 focus:border-solid transition-all outline-none font-serif text-lg leading-[1.8] text-neutral-800 font-normal"
                             />
                         </div>
                     </div>
@@ -308,7 +335,7 @@ export default function NewArticlePage() {
 
                     {/* Media Card */}
                     <div className="bg-white rounded-[3rem] shadow-sm border border-neutral-100 p-8 space-y-6">
-                        <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Visuel de Couverture</label>
+                        <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Image de couverture</label>
 
                         <div
                             className="relative aspect-[4/3] rounded-[2rem] border-2 border-dashed border-neutral-100 bg-neutral-50/50 hover:bg-neutral-50 hover:border-primary-200 transition-all cursor-pointer group flex flex-col items-center justify-center overflow-hidden"
@@ -321,7 +348,7 @@ export default function NewArticlePage() {
                                     <div className="w-12 h-12 rounded-2xl bg-white shadow-inner flex items-center justify-center text-neutral-200 group-hover:text-primary-500 transition-colors mx-auto mb-4">
                                         <Plus size={24} />
                                     </div>
-                                    <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Choisir un visuel</p>
+                                    <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Modifier le visuel</p>
                                 </div>
                             )}
 
@@ -332,7 +359,7 @@ export default function NewArticlePage() {
                                         className="absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center"
                                     >
                                         <div className="w-10 h-10 border-4 border-primary-50 border-t-primary-500 rounded-full animate-spin mb-4"></div>
-                                        <span className="text-[10px] font-black text-primary-600 uppercase tracking-widest">Transfert en cours...</span>
+                                        <span className="text-[10px] font-black text-primary-600 uppercase tracking-widest">Envoi...</span>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -390,6 +417,7 @@ export default function NewArticlePage() {
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </form>

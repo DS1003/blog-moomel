@@ -113,6 +113,8 @@ model Category {
   name        String    @unique
   slug        String    @unique
   description String?
+  icon        String?   @default("Box")
+  color       String?   @default("text-primary-500 bg-primary-50")
   articles    Article[]
   
   createdAt   DateTime  @default(now())
@@ -176,12 +178,22 @@ model Badge {
   name        String   @unique
   description String
   icon        String
+  rarity      String   @default("Common")
+  color       String   @default("text-gray-500 bg-gray-50")
   xpRequired  Int      @default(0)
   
   users       User[]   @relation("UserBadges")
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model GamificationConfig {
+  id        String   @id @default(cuid())
+  action    String   @unique // e.g., "COMMENT", "ARTICLE_READ", "RARE_BADGE"
+  xpAmount  Int      @default(0)
+  
+  updatedAt DateTime @updatedAt
 }
 
 model Report {

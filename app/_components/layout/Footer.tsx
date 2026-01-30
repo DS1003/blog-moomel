@@ -2,10 +2,17 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/app/_components/providers/LanguageProvider';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const pathname = usePathname();
+
+  // Don't show public footer on admin pages
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <footer className="relative bg-neutral-950 text-white overflow-hidden pt-16 md:pt-20 pb-8 md:pb-10">

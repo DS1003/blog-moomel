@@ -15,10 +15,16 @@ if (process.env.NODE_ENV === 'development') {
   console.log('----------------------------------------');
 }
 
-cloudinary.config({
-  cloud_name: cloudName,
-  api_key: apiKey,
-  api_secret: apiSecret,
-});
+// If CLOUDINARY_URL is present, the SDK automatically configures itself.
+// We only manually config if we are relying on individual variables.
+if (process.env.CLOUDINARY_URL) {
+  console.log('✅ Cloudinary Config: Using CLOUDINARY_URL');
+} else {
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+  });
+}
 
 export default cloudinary;

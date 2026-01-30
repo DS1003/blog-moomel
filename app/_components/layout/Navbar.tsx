@@ -15,6 +15,11 @@ export default function Navbar() {
   const pathname = usePathname();
   const { t } = useLanguage();
 
+  // Don't show public navbar on admin pages
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   // Pages where the hero section is dark/image-heavy, requiring white text initially
   const isDarkHeroPage = pathname === '/about' || pathname?.startsWith('/articles');
 

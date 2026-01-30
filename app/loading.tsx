@@ -1,36 +1,25 @@
-import Threads from "@/app/_components/ui/Threads";
 import Image from "next/image";
 
 export default function Loading() {
     return (
-        <div className="fixed inset-0 z-[9999] bg-[#F9F7F2] flex flex-col items-center justify-center overflow-hidden">
-            {/* Background Animation */}
-            <div className="absolute inset-0">
-                <Threads />
+        <div className="fixed inset-0 z-[9999] bg-white backdrop-blur-sm flex flex-col items-center justify-center">
+            <div className="relative w-24 h-24 md:w-28 md:h-28 mb-4">
+                <Image
+                    src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
+                    alt="Moomel"
+                    fill
+                    className="object-contain animate-bounce-slow"
+                    priority
+                />
             </div>
 
-            {/* Content */}
-            <div className="relative z-10 flex flex-col items-center animate-fade-in-up">
-                {/* Logo Container */}
-                <div className="relative w-24 h-24 md:w-32 md:h-32 mb-6 rounded-full bg-white shadow-xl p-2 animate-bounce-slow">
-                    <div className="relative w-full h-full rounded-full overflow-hidden border border-neutral-100">
-                        <Image
-                            src="https://res.cloudinary.com/dgro5x4h8/image/upload/v1765297757/Logo_512_vwh0kd.png"
-                            alt="Moomel Logo"
-                            fill
-                            className="object-contain p-2"
-                            priority
-                        />
-                    </div>
-                </div>
+            <div className="flex flex-col items-center gap-3">
+                {/* Minimalist Spinner */}
+                <div className="w-5 h-5 border-[2px] border-neutral-100 border-t-primary-600 rounded-full animate-spin"></div>
 
-                {/* Text */}
-                <h1 className="text-4xl md:text-5xl font-serif text-neutral-900 tracking-tight font-medium mb-3">
-                    Moomel
-                </h1>
-                <div className="h-px w-16 bg-primary-400 mb-3"></div>
-                <span className="text-neutral-500 uppercase tracking-[0.3em] text-xs font-medium">
-                    Chargement...
+                {/* Premium Text */}
+                <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-neutral-400 font-medium animate-pulse">
+                    Chargement
                 </span>
             </div>
         </div>
