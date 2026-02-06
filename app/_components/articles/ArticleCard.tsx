@@ -26,7 +26,7 @@ export default function ArticleCard({ id, slug, title, excerpt, author, date, im
             alt={title}
             fill
             className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-neutral-100">

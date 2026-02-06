@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
     FileText,
     Eye,
@@ -33,10 +34,13 @@ interface Article {
     category?: { name: string };
 }
 
-export default function ArticlesPage() {
+function ArticlesPageContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('searchQuery') || '';
+
     const [articles, setArticles] = useState<Article[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [filter, setFilter] = useState('all');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [showFilters, setShowFilters] = useState(false);
@@ -65,7 +69,10 @@ export default function ArticlesPage() {
     const categories = Array.from(new Set(articles.map(a => a.category?.name).filter(Boolean))) as string[];
 
     const filteredArticles = articles.filter(article => {
-        const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (article.author?.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (article.category?.name || '').toLowerCase().includes(searchQuery.toLowerCase());
+
         const matchesStatus = filter === 'all' ||
             (filter === 'published' && article.published) ||
             (filter === 'draft' && !article.published);
@@ -441,5 +448,13 @@ export default function ArticlesPage() {
                 </div>
             </motion.div>
         </motion.div>
+    );
+}
+
+export default function ArticlesPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <ArticlesPageContent />
+        </Suspense>
     );
 }

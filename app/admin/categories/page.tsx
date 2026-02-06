@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
     FolderTree,
     Plus,
@@ -49,9 +50,12 @@ const COLORS = [
     'text-neutral-500 bg-neutral-50'
 ];
 
-export default function CategoriesPage() {
+function CategoriesPageContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('searchQuery') || '';
+
     const [categories, setCategories] = useState<Category[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -414,5 +418,13 @@ export default function CategoriesPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function CategoriesPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <CategoriesPageContent />
+        </Suspense>
     );
 }

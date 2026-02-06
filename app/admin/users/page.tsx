@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import {
     Users,
     ShieldCheck,
@@ -47,10 +48,13 @@ interface User {
     };
 }
 
-export default function UsersPage() {
+function UsersPageContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('searchTerm') || '';
+
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(initialQuery);
     const [filterRole, setFilterRole] = useState('all');
 
     // Editing State
@@ -509,5 +513,13 @@ export default function UsersPage() {
                 )}
             </AnimatePresence>
         </motion.div>
+    );
+}
+
+export default function UsersPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <UsersPageContent />
+        </Suspense>
     );
 }

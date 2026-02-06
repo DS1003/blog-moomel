@@ -29,6 +29,7 @@ export default function AdminDashboard() {
   const { data: session } = useSession();
   const [articles, setArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dashboardSearch, setDashboardSearch] = useState('');
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -126,12 +127,24 @@ export default function AdminDashboard() {
           variants={itemVariants}
           className="lg:col-span-8 bg-white rounded-[3rem] p-8 shadow-sm border border-neutral-100"
         >
-          <div className="flex justify-between items-center mb-8 px-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 px-2 gap-4">
             <h2 className="text-2xl font-serif font-bold text-neutral-900">Articles récents</h2>
-            <Link href="/admin/articles" className="group flex items-center gap-2 text-sm font-bold text-primary-600 hover:text-primary-700">
-              <span>Tout voir</span>
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-64">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+                <input
+                  type="text"
+                  value={dashboardSearch}
+                  onChange={(e) => setDashboardSearch(e.target.value)}
+                  placeholder="Filtrer ces articles..."
+                  className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-100 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                />
+              </div>
+              <Link href="/admin/articles" className="group flex items-center gap-2 text-sm font-bold text-primary-600 hover:text-primary-700 whitespace-nowrap">
+                <span>Tout voir</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
 
           <div className="w-full">
@@ -153,59 +166,65 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-50">
-                    {articles.slice(0, 5).map((article) => (
-                      <tr key={article.id} className="group hover:bg-neutral-50/50 transition-all cursor-pointer">
-                        <td className="px-4 py-5 font-medium text-neutral-900">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-neutral-100 flex-shrink-0 flex items-center justify-center text-neutral-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
-                              <FileText size={16} />
+                    {articles
+                      .filter(a => a.title.toLowerCase().includes(dashboardSearch.toLowerCase()))
+                      .slice(0, 5)
+                      .map((article) => (
+                        <tr key={article.id} className="group hover:bg-neutral-50/50 transition-all cursor-pointer">
+                          <td className="px-4 py-5 font-medium text-neutral-900">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-neutral-100 flex-shrink-0 flex items-center justify-center text-neutral-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                                <FileText size={16} />
+                              </div>
+                              <span className="text-sm font-bold group-hover:text-primary-600 transition-colors line-clamp-1">{article.title}</span>
                             </div>
-                            <span className="text-sm font-bold group-hover:text-primary-600 transition-colors line-clamp-1">{article.title}</span>
-                          </div>
-                        </td>
-                        <td className="hidden lg:table-cell px-4 py-5 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-neutral-200 border border-white"></div>
-                            <span className="text-xs font-bold text-neutral-500">{article.author?.name || 'Moomel'}</span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-5 whitespace-nowrap">
-                          <span className={`px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-widest ${article.published
-                            ? 'bg-green-50 text-green-600 border border-green-100'
-                            : 'bg-neutral-50 text-neutral-400 border border-neutral-100'
-                            }`}>
-                            {article.published ? 'Publié' : 'Brouillon'}
-                          </span>
-                        </td>
-                        <td className="px-4 py-5 whitespace-nowrap text-right">
-                          <div className="flex items-center justify-end gap-1.5 text-xs text-neutral-400 font-serif italic">
-                            <Clock size={12} className="not-italic opacity-50" />
-                            {new Date(article.createdAt).toLocaleDateString()}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="hidden lg:table-cell px-4 py-5 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-full bg-neutral-200 border border-white"></div>
+                              <span className="text-xs font-bold text-neutral-500">{article.author?.name || 'Moomel'}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-5 whitespace-nowrap">
+                            <span className={`px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-widest ${article.published
+                              ? 'bg-green-50 text-green-600 border border-green-100'
+                              : 'bg-neutral-50 text-neutral-400 border border-neutral-100'
+                              }`}>
+                              {article.published ? 'Publié' : 'Brouillon'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-5 whitespace-nowrap text-right">
+                            <div className="flex items-center justify-end gap-1.5 text-xs text-neutral-400 font-serif italic">
+                              <Clock size={12} className="not-italic opacity-50" />
+                              {new Date(article.createdAt).toLocaleDateString()}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
 
                 {/* Mobile Card View for Dashboard */}
                 <div className="md:hidden flex flex-col gap-4">
-                  {articles.slice(0, 5).map((article) => (
-                    <div key={article.id} className="flex items-center gap-4 p-4 rounded-3xl bg-neutral-50/50 border border-neutral-100/50">
-                      <div className="w-10 h-10 rounded-2xl bg-white border border-neutral-100 flex-shrink-0 flex items-center justify-center text-neutral-400 shadow-sm">
-                        <FileText size={18} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-neutral-900 truncate mb-1">{article.title}</h4>
-                        <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${article.published ? 'bg-green-500' : 'bg-neutral-300'}`}></span>
-                          <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">{article.published ? 'Publié' : 'Brouillon'}</span>
-                          <span className="text-[10px] text-neutral-300">•</span>
-                          <span className="text-[10px] font-medium text-neutral-400">{new Date(article.createdAt).toLocaleDateString()}</span>
+                  {articles
+                    .filter(a => a.title.toLowerCase().includes(dashboardSearch.toLowerCase()))
+                    .slice(0, 5)
+                    .map((article) => (
+                      <div key={article.id} className="flex items-center gap-4 p-4 rounded-3xl bg-neutral-50/50 border border-neutral-100/50">
+                        <div className="w-10 h-10 rounded-2xl bg-white border border-neutral-100 flex-shrink-0 flex items-center justify-center text-neutral-400 shadow-sm">
+                          <FileText size={18} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-bold text-neutral-900 truncate mb-1">{article.title}</h4>
+                          <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${article.published ? 'bg-green-500' : 'bg-neutral-300'}`}></span>
+                            <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">{article.published ? 'Publié' : 'Brouillon'}</span>
+                            <span className="text-[10px] text-neutral-300">•</span>
+                            <span className="text-[10px] font-medium text-neutral-400">{new Date(article.createdAt).toLocaleDateString()}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </>
             )}

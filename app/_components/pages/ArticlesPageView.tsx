@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import ArticleList from '@/app/_components/articles/ArticleList';
 import { useLanguage } from '@/app/_components/providers/LanguageProvider';
 import ScrollReveal from '@/app/_components/ui/ScrollReveal';
@@ -18,6 +18,8 @@ type Article = {
 
 export default function ArticlesPageView({ articles }: { articles: Article[] }) {
     const { t } = useLanguage();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
     const filters = [
         t.articles_page.filter_face,
@@ -28,10 +30,22 @@ export default function ArticlesPageView({ articles }: { articles: Article[] }) 
         t.articles_page.filter_tutorials
     ];
 
+    const filteredArticles = useMemo(() => {
+        return articles.filter(article => {
+            const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
+
+            const matchesCategory = selectedCategory === 'All' ||
+                (article as any).category?.name === selectedCategory; // Fallback if category name matches
+
+            return matchesSearch && matchesCategory;
+        });
+    }, [articles, searchQuery, selectedCategory]);
+
     return (
         <div className="min-h-screen bg-neutral-50 pb-20">
             {/* Header / Hero for Articles */}
-            <div className="relative bg-primary-900 text-white pt-24 sm:pt-32 pb-20 sm:pb-24 px-4 overflow-hidden">
+            <div className="relative bg-primary-900 text-white pt-24 lg:pt-28 pb-16 lg:pb-20 px-4 overflow-hidden">
                 <div className="absolute inset-0 opacity-20">
                     <div className="absolute top-0 left-0 w-64 h-64 sm:w-96 sm:h-96 bg-primary-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
                     <div className="absolute bottom-0 right-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-accent-600 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
@@ -42,7 +56,7 @@ export default function ArticlesPageView({ articles }: { articles: Article[] }) 
                         <span className="inline-block py-1 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-medium tracking-wide mb-4">
                             {t.articles_page.tag}
                         </span>
-                        <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-tight">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-tight">
                             {t.articles_page.title}
                         </h1>
                         <p className="text-lg sm:text-xl text-primary-100 max-w-2xl mx-auto mb-8 sm:mb-10 font-light px-4">
@@ -53,6 +67,8 @@ export default function ArticlesPageView({ articles }: { articles: Article[] }) 
                         <div className="max-w-xl mx-auto relative px-4">
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={t.articles_page.search_placeholder}
                                 className="w-full px-6 sm:px-8 py-4 sm:py-5 rounded-full border-none bg-white text-neutral-900 placeholder-neutral-400 focus:ring-4 focus:ring-primary-500/30 outline-none shadow-2xl text-base sm:text-lg"
                             />
@@ -67,18 +83,25 @@ export default function ArticlesPageView({ articles }: { articles: Article[] }) 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20">
                 {/* Category Filters (Visual) */}
                 <div className="flex overflow-x-auto pb-6 gap-2 md:gap-4 no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 justify-start md:justify-center mb-10 md:mb-12">
-                    <button className="whitespace-nowrap px-4 py-2 md:px-6 md:py-3 text-xs md:text-base rounded-full bg-neutral-900 text-white font-medium shadow-lg flex-shrink-0">
+                    <button
+                        onClick={() => setSelectedCategory('All')}
+                        className={`whitespace-nowrap px-4 py-2 md:px-6 md:py-3 text-xs md:text-base rounded-full transition-all duration-300 font-medium shadow-lg flex-shrink-0 ${selectedCategory === 'All' ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-600 border border-neutral-100'}`}
+                    >
                         {t.articles_page.filter_all}
                     </button>
                     {filters.map((cat) => (
-                        <button key={cat} className="whitespace-nowrap px-4 py-2 md:px-6 md:py-3 text-xs md:text-base rounded-full bg-white text-neutral-600 font-medium shadow-sm hover:shadow-md hover:text-primary-600 transition-all border border-neutral-100 flex-shrink-0">
+                        <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(cat)}
+                            className={`whitespace-nowrap px-4 py-2 md:px-6 md:py-3 text-xs md:text-base rounded-full transition-all duration-300 font-medium shadow-sm hover:shadow-md border flex-shrink-0 ${selectedCategory === cat ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-neutral-600 border-neutral-100 hover:text-primary-600'}`}
+                        >
                             {cat}
                         </button>
                     ))}
                 </div>
 
                 <ScrollReveal animation="fade-up" delay={0.2}>
-                    <ArticleList articles={articles as any} />
+                    <ArticleList articles={filteredArticles as any} />
                 </ScrollReveal>
             </div>
         </div>

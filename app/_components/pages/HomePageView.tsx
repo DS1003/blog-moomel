@@ -1,6 +1,7 @@
 'use client';
 
 import { useLanguage } from "@/app/_components/providers/LanguageProvider";
+import { useSettings } from "@/app/_components/providers/SettingsProvider";
 import ArticleList from "@/app/_components/articles/ArticleList";
 import Hero from "@/app/_components/layout/Hero";
 import Marquee from "@/app/_components/ui/Marquee";
@@ -24,6 +25,7 @@ type Article = {
 
 export default function HomePageView({ articles }: { articles: Article[] }) {
     const { t, locale } = useLanguage();
+    const settings = useSettings();
 
     return (
         <div className="bg-neutral-50 overflow-hidden">
@@ -42,12 +44,12 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
             </div>
 
             {/* Our Pillars / Values - Upgraded Section */}
-            <section className="py-16 md:py-24 bg-[#F9F7F2]">
+            <section className="py-16 lg:py-20 xl:py-24 bg-[#F9F7F2]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal animation="fade-up">
-                        <div className="text-center mb-12 md:mb-16">
-                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-neutral-900 mb-4 md:mb-6">{t.home.pillars_title}</h2>
-                            <p className="text-neutral-600 max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed">
+                        <div className="text-center mb-12 lg:mb-16">
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-neutral-900 mb-4 md:mb-6">{t.home.pillars_title}</h2>
+                            <p className="text-neutral-600 max-w-2xl mx-auto text-base lg:text-lg font-light leading-relaxed">
                                 {t.home.pillars_subtitle}
                             </p>
                         </div>
@@ -70,16 +72,16 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
             </section>
 
             {/* Discovery Section - Ingredients */}
-            <section className="py-16 md:py-24 bg-white">
+            <section className="py-16 lg:py-20 xl:py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
+                    <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center">
                         <ScrollReveal animation="slide-right">
                             <div className="relative">
                                 <div className="absolute -top-6 -left-6 md:-top-10 md:-left-10 w-24 h-24 md:w-40 md:h-40 bg-primary-100 rounded-full blur-3xl opacity-50"></div>
-                                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-neutral-900 mb-4 md:mb-6 leading-tight">
+                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-neutral-900 mb-4 md:mb-6 leading-tight">
                                     {t.home.discovery_title}
                                 </h2>
-                                <p className="text-lg md:text-xl text-neutral-600 mb-8 md:mb-10 font-light leading-relaxed italic">
+                                <p className="text-lg lg:text-xl text-neutral-600 mb-8 md:mb-10 font-light leading-relaxed italic">
                                     "{t.home.discovery_subtitle}"
                                 </p>
 
@@ -194,14 +196,14 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                         <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/90 via-neutral-900/40 to-transparent z-0"></div>
 
                         <div className="grid lg:grid-cols-2 relative z-10">
-                            <div className="p-8 sm:p-12 md:p-16 lg:p-24 flex flex-col justify-center order-2 lg:order-1">
+                            <div className="p-8 sm:p-12 lg:p-16 xl:p-24 flex flex-col justify-center order-2 lg:order-1">
                                 <ScrollReveal animation="slide-right" delay={0.2}>
                                     <span className="text-primary-400 font-medium tracking-widest text-xs sm:text-sm uppercase mb-3 sm:mb-4 block">
                                         {t.home.marketplace}
                                     </span>
                                 </ScrollReveal>
                                 <ScrollReveal animation="fade-up" delay={0.3}>
-                                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif mb-6 md:mb-8 leading-[1.1] md:leading-[0.95] tracking-tight">
+                                    <h2 className="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-serif mb-6 md:mb-8 leading-[1.1] md:leading-[0.95] tracking-tight">
                                         {t.home.auth_title} <br /> <span className="italic text-primary-300 font-light">{t.home.auth_subtitle}</span>
                                     </h2>
                                 </ScrollReveal>
@@ -342,7 +344,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                             </div>
                         </div>
                         <h2 className="text-3xl sm:text-4xl md:text-6xl font-serif mb-6 md:mb-8 text-neutral-900 leading-tight">
-                            {t.home.join_title} <br /> <span className="text-primary-600">Moomel</span>
+                            {t.home.join_title} <br /> <span className="text-primary-600">{settings.site_name}</span>
                         </h2>
                         <p className="text-lg md:text-xl text-neutral-600 mb-8 md:mb-10 max-w-2xl mx-auto font-light leading-relaxed">
                             {t.home.join_desc}

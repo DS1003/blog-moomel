@@ -41,7 +41,7 @@ export default function Hero() {
                         </ScrollReveal>
 
                         {/* Big Headline - Split Text Animation */}
-                        <div className="text-[clamp(2.75rem,8vw,6rem)] font-serif font-medium text-neutral-900 leading-[1.2] mb-6 lg:mb-8 tracking-tight flex flex-col items-start w-full py-2">
+                        <div className="text-[clamp(2.75rem,7vw,4.5rem)] xl:text-[6rem] font-serif font-medium text-neutral-900 leading-[1.2] mb-6 lg:mb-8 tracking-tight flex flex-col items-start w-full py-2">
                             <SplitText
                                 text={t.hero?.title1 || "Naturellement"}
                                 delay={200}
@@ -93,7 +93,7 @@ export default function Hero() {
                     {/* Right: Visual - Scroll Reveal */}
                     <div className="lg:col-span-5 w-full order-2 flex justify-center lg:block mt-4 lg:mt-0">
                         <ScrollReveal animation="zoom-in" duration={1} delay={0.2}>
-                            <div className="relative w-full max-w-[350px] sm:max-w-md lg:max-w-full aspect-[4/5] lg:aspect-[3/4] lg:h-[700px] mx-auto">
+                            <div className="relative w-full max-w-[350px] sm:max-w-md lg:max-w-full aspect-[4/5] lg:aspect-[3/4] lg:h-[550px] xl:h-[700px] mx-auto">
                                 {/* Single Hero Image - Arch Shape */}
                                 <div className="relative w-full h-full rounded-t-[500px] rounded-b-[40px] lg:rounded-b-[200px] overflow-hidden shadow-2xl shadow-neutral-200/50 mx-auto transform transition-transform hover:scale-[1.02] duration-700">
                                     <Image

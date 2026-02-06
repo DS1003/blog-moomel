@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
     Image as ImageIcon,
     UploadCloud,
@@ -20,8 +21,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-export default function MediaLibraryPage() {
+function MediaLibraryPageContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('searchQuery') || '';
+
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
 
     // Mock Media Data
     const mediaItems = [
@@ -63,6 +68,8 @@ export default function MediaLibraryPage() {
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
                     <input
                         type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Chercher une image, une vidéo, un document..."
                         className="w-full pl-12 pr-6 py-3 rounded-2xl border border-neutral-100 bg-neutral-50 focus:bg-white focus:border-primary-300 transition-all outline-none text-sm font-medium"
                     />
@@ -102,46 +109,48 @@ export default function MediaLibraryPage() {
                     <span className="text-[10px] font-black text-neutral-300 uppercase tracking-widest group-hover:text-primary-500">Ajouter</span>
                 </div>
 
-                {mediaItems.map((item, i) => (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.05 }}
-                        key={item.id}
-                        className="aspect-square rounded-[2.5rem] bg-white border border-neutral-100 overflow-hidden relative group shadow-sm hover:shadow-xl hover:shadow-neutral-200/50 transition-all cursor-pointer"
-                    >
-                        <Image
-                            src={item.url}
-                            alt={item.name}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
+                {mediaItems
+                    .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.type.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .map((item, i) => (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.05 }}
+                            key={item.id}
+                            className="aspect-square rounded-[2.5rem] bg-white border border-neutral-100 overflow-hidden relative group shadow-sm hover:shadow-xl hover:shadow-neutral-200/50 transition-all cursor-pointer"
+                        >
+                            <Image
+                                src={item.url}
+                                alt={item.name}
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
 
-                        {/* Overlay Controls */}
-                        <div className="absolute inset-0 bg-neutral-900/60 opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm p-4 flex flex-col justify-between">
-                            <div className="flex justify-between items-start">
-                                <span className="px-2 py-1 bg-white/20 text-[8px] font-black text-white uppercase tracking-tighter backdrop-blur-md rounded border border-white/20">
-                                    {item.type.split('/')[1]}
-                                </span>
-                                <button className="w-8 h-8 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-red-500 transition-all">
-                                    <Trash2 size={14} />
-                                </button>
-                            </div>
-
-                            <div className="space-y-3">
-                                <p className="text-[10px] font-bold text-white truncate">{item.name}</p>
-                                <div className="flex gap-2">
-                                    <button className="flex-1 py-2 bg-primary-500 text-white rounded-xl flex items-center justify-center hover:bg-primary-400 transition-all">
-                                        <Eye size={14} />
-                                    </button>
-                                    <button className="flex-1 py-2 bg-white/20 text-white rounded-xl flex items-center justify-center hover:bg-white/40 transition-all">
-                                        <Download size={14} />
+                            {/* Overlay Controls */}
+                            <div className="absolute inset-0 bg-neutral-900/60 opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm p-4 flex flex-col justify-between">
+                                <div className="flex justify-between items-start">
+                                    <span className="px-2 py-1 bg-white/20 text-[8px] font-black text-white uppercase tracking-tighter backdrop-blur-md rounded border border-white/20">
+                                        {item.type.split('/')[1]}
+                                    </span>
+                                    <button className="w-8 h-8 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-red-500 transition-all">
+                                        <Trash2 size={14} />
                                     </button>
                                 </div>
+
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-bold text-white truncate">{item.name}</p>
+                                    <div className="flex gap-2">
+                                        <button className="flex-1 py-2 bg-primary-500 text-white rounded-xl flex items-center justify-center hover:bg-primary-400 transition-all">
+                                            <Eye size={14} />
+                                        </button>
+                                        <button className="flex-1 py-2 bg-white/20 text-white rounded-xl flex items-center justify-center hover:bg-white/40 transition-all">
+                                            <Download size={14} />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    ))}
             </div>
 
             {/* Selection Info (Floating - Mockup) */}
@@ -163,5 +172,13 @@ export default function MediaLibraryPage() {
                 </button>
             </div>
         </motion.div>
+    );
+}
+
+export default function MediaLibraryPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <MediaLibraryPageContent />
+        </Suspense>
     );
 }

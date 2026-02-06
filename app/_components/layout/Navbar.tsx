@@ -7,24 +7,15 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/app/_components/providers/LanguageProvider';
 import LanguageSwitcher from '@/app/_components/ui/LanguageSwitcher';
+import { useSettings } from '@/app/_components/providers/SettingsProvider';
 
 export default function Navbar() {
+  const settings = useSettings();
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const { t } = useLanguage();
-
-  // Don't show public navbar on admin pages
-  if (pathname?.startsWith('/admin')) {
-    return null;
-  }
-
-  // Pages where the hero section is dark/image-heavy, requiring white text initially
-  const isDarkHeroPage = pathname === '/about' || pathname?.startsWith('/articles');
-
-  // Determine if we should use dark text (scrolled OR not on a dark hero page)
-  const useDarkText = isScrolled || !isDarkHeroPage;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,12 +25,21 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Pages where the hero section is dark/image-heavy, requiring white text initially
+  const isDarkHeroPage = pathname === '/about' || pathname?.startsWith('/articles');
+
+  // Determine if we should use dark text (scrolled OR not on a dark hero page)
+  const useDarkText = isScrolled || !isDarkHeroPage;
+
+  const isAdminPage = pathname?.startsWith('/admin');
+
   const menuItems = [
     { label: t.nav.home, key: 'Accueil' },
     { label: t.nav.articles, key: 'Articles' },
     { label: t.nav.categories, key: 'Catégories' },
     { label: t.nav.about, key: 'À Propos' },
   ];
+  if (isAdminPage) return null;
 
   return (
     <>
@@ -67,7 +67,7 @@ export default function Navbar() {
                 <div className="flex flex-col">
                   <span className={`text-lg md:text-xl lg:text-2xl font-serif font-bold leading-none transition-colors ${useDarkText ? 'text-neutral-900 group-hover:text-primary-600' : 'text-white group-hover:text-primary-200'
                     }`}>
-                    Moomel
+                    {settings.site_name}
                   </span>
                   <span className={`text-[0.55rem] md:text-[0.65rem] uppercase tracking-[0.2em] font-medium ml-0.5 transition-colors hidden xs:block ${useDarkText ? 'text-neutral-500' : 'text-white/80'
                     }`}>

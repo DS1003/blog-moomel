@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import {
     LayoutDashboard,
+    TrendingUp,
     FileText,
     MessageSquare,
     Users,
@@ -27,6 +28,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
     const links = [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'Analytics', href: '/admin/analytics', icon: TrendingUp },
         { name: 'Articles', href: '/admin/articles', icon: FileText },
         { name: 'Commentaires', href: '/admin/comments', icon: MessageSquare },
         { name: 'Utilisatrices', href: '/admin/users', icon: Users },

@@ -29,8 +29,9 @@ export default function MobileTabBar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
 
-    // Don't show on admin pages or auth pages
-    if (pathname?.startsWith('/admin') || pathname?.startsWith('/auth')) return null;
+    const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/auth');
+
+    if (isAdminPage) return null;
 
     const tabs = [
         { name: 'Accueil', href: '/', id: 'home', icon: Home },

@@ -7,11 +7,6 @@ export default function ScrollToTop() {
     const pathname = usePathname();
     const [isVisible, setIsVisible] = useState(false);
 
-    // Don't show on admin pages
-    if (pathname?.startsWith('/admin')) {
-        return null;
-    }
-
     // Show button when page is scrolled upto given distance
     const toggleVisibility = () => {
         if (window.scrollY > 300) {
@@ -36,6 +31,11 @@ export default function ScrollToTop() {
             window.removeEventListener('scroll', toggleVisibility);
         };
     }, []);
+
+    // Don't show on admin pages
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     return (
         <div className="fixed bottom-8 right-8 z-[60] pointer-events-none">

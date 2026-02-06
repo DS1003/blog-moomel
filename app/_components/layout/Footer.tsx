@@ -4,10 +4,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/app/_components/providers/LanguageProvider';
+import { useSettings } from '@/app/_components/providers/SettingsProvider';
 
 export default function Footer() {
+  const settings = useSettings();
   const { t } = useLanguage();
   const pathname = usePathname();
+
+  const menuLinks = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.articles, href: '/articles' },
+    { label: t.nav.about, href: '/about' },
+    { label: t.nav.contact, href: '/contact' }
+  ];
 
   // Don't show public footer on admin pages
   if (pathname?.startsWith('/admin')) {
@@ -36,7 +45,7 @@ export default function Footer() {
                 />
               </div>
               <span className="text-2xl md:text-3xl font-serif text-white tracking-tight group-hover:text-primary-200 transition-colors">
-                Moomel
+                {settings.site_name}
               </span>
             </Link>
             <p className="text-neutral-400 text-base md:text-lg leading-relaxed max-w-sm font-light mx-auto md:mx-0">
@@ -110,7 +119,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/5 mt-12 md:mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm text-neutral-500 font-light text-center">
           <p className="mb-4 md:mb-0">
-            © {new Date().getFullYear()} Moomel. {t.footer.rights}
+            © {new Date().getFullYear()} {settings.site_name}. {t.footer.rights}
           </p>
           <div className="flex items-center justify-center gap-4 md:gap-6">
             <span className="hover:text-white transition-colors cursor-pointer">Sénégal 🇸🇳</span>

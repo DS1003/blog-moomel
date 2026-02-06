@@ -17,10 +17,16 @@ import {
     MessageSquare,
     Heart,
     Zap,
-    Menu
+    Menu,
+    FileText,
+    Users as UsersIcon,
+    FolderTree,
+    MessageCircle,
+    Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface AdminHeaderProps {
     onOpenSidebar?: () => void;
@@ -31,6 +37,11 @@ export default function AdminHeader({ onOpenSidebar }: AdminHeaderProps) {
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [results, setResults] = useState<any[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
 
     const notificationRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -77,13 +88,67 @@ export default function AdminHeader({ onOpenSidebar }: AdminHeaderProps) {
             if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
                 setIsProfileOpen(false);
             }
+            // Close search results if clicking outside the search container
+            const searchContainer = document.getElementById('admin-search-container');
+            if (searchContainer && !searchContainer.contains(event.target as Node)) {
+                setShowResults(false);
+            }
         }
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // Debounced search
+    useEffect(() => {
+        const timer = setTimeout(async () => {
+            if (searchQuery.length >= 2) {
+                setIsSearching(true);
+                setShowResults(true);
+                try {
+                    const res = await fetch(`/api/admin/search?q=${encodeURIComponent(searchQuery)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setResults(data.results);
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
+                } finally {
+                    setIsSearching(false);
+                }
+            } else {
+                setResults([]);
+                setShowResults(false);
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
     const markAllRead = () => {
         setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!searchQuery.trim()) return;
+
+        // Smart redirect based on current context or content
+        const query = encodeURIComponent(searchQuery);
+
+        if (pathname.includes('/users')) {
+            router.push(`/admin/users?searchTerm=${query}`);
+        } else if (pathname.includes('/comments')) {
+            router.push(`/admin/comments?searchTerm=${query}`);
+        } else if (pathname.includes('/media')) {
+            router.push(`/admin/media?searchQuery=${query}`);
+        } else if (pathname.includes('/badges')) {
+            router.push(`/admin/badges?searchQuery=${query}`);
+        } else if (pathname.includes('/categories')) {
+            router.push(`/admin/categories?searchQuery=${query}`);
+        } else {
+            // Default to articles
+            router.push(`/admin/articles?searchQuery=${query}`);
+        }
     };
 
     return (
@@ -97,19 +162,84 @@ export default function AdminHeader({ onOpenSidebar }: AdminHeaderProps) {
             </button>
 
             {/* Left: Search Bar */}
-            <div className="flex-1 max-w-xl hidden md:block">
-                <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary-500 transition-colors">
-                        <Search size={18} strokeWidth={2.5} />
+            <div className="flex-1 max-w-xl hidden md:block" id="admin-search-container">
+                <form onSubmit={handleSearch} className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary-500 transition-colors z-10">
+                        {isSearching ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} strokeWidth={2.5} />}
                     </div>
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => searchQuery.length >= 2 && setShowResults(true)}
                         placeholder="Rechercher un article, une utilisatrice..."
                         className="w-full pl-12 pr-6 py-3 rounded-2xl border border-neutral-200/60 bg-neutral-50/50 focus:bg-white focus:border-primary-300 focus:ring-4 focus:ring-primary-500/5 transition-all text-sm outline-none font-medium"
                     />
-                </div>
+
+                    {/* Autocomplete Results Dropdown */}
+                    <AnimatePresence>
+                        {showResults && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                className="absolute top-full left-0 right-0 mt-3 bg-white rounded-[2rem] shadow-[0_20px_70px_rgba(0,0,0,0.15)] border border-neutral-100 overflow-hidden z-50 p-2"
+                            >
+                                <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                                    {results.length > 0 ? (
+                                        <div className="space-y-1">
+                                            {results.map((res, i) => (
+                                                <Link
+                                                    key={i}
+                                                    href={res.link}
+                                                    onClick={() => setShowResults(false)}
+                                                    className="flex items-center gap-4 p-3 hover:bg-neutral-50 rounded-2xl transition-all group"
+                                                >
+                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 ${res.type === 'article' ? 'bg-blue-50 text-blue-500' :
+                                                            res.type === 'user' ? 'bg-purple-50 text-purple-500' :
+                                                                res.type === 'category' ? 'bg-emerald-50 text-emerald-500' :
+                                                                    'bg-amber-50 text-amber-500'
+                                                        }`}>
+                                                        {res.type === 'article' && <FileText size={18} />}
+                                                        {res.type === 'user' && <UsersIcon size={18} />}
+                                                        {res.type === 'category' && <FolderTree size={18} />}
+                                                        {res.type === 'comment' && <MessageCircle size={18} />}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="text-sm font-bold text-neutral-900 truncate group-hover:text-primary-600 transition-colors">
+                                                            {res.title}
+                                                        </h4>
+                                                        <p className="text-[10px] text-neutral-400 font-black uppercase tracking-widest">
+                                                            {res.subtitle}
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="p-10 text-center">
+                                            <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                                <Search size={24} className="text-neutral-200" />
+                                            </div>
+                                            <p className="text-sm font-bold text-neutral-400 uppercase tracking-widest">Aucun résultat trouvé</p>
+                                        </div>
+                                    )}
+                                </div>
+                                {results.length > 0 && (
+                                    <div className="p-3 border-t border-neutral-50 text-center">
+                                        <button
+                                            type="button"
+                                            onClick={handleSearch}
+                                            className="text-[10px] font-black text-primary-600 uppercase tracking-widest hover:text-primary-700 transition-colors"
+                                        >
+                                            Voir tous les résultats
+                                        </button>
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </form>
             </div>
 
             {/* Right Side Actions */}

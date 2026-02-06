@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import {
     MessageSquare,
     MoreHorizontal,
@@ -37,10 +38,14 @@ interface Comment {
     reports: any[];
 }
 
-export default function CommentsPage() {
+function CommentsPageContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('searchTerm') || '';
+
     const [comments, setComments] = useState<Comment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState('all');
+    const [searchTerm, setSearchTerm] = useState(initialQuery);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
     // Reply State
@@ -67,6 +72,12 @@ export default function CommentsPage() {
     }, []);
 
     const filteredComments = comments.filter(c => {
+        const matchesSearch = c.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            c.author.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            c.article.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+        if (!matchesSearch) return false;
+
         if (filter === 'reported') return c.reports && c.reports.length > 0;
         if (filter === 'hidden') return c.hidden;
         return true;
@@ -184,6 +195,8 @@ export default function CommentsPage() {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
                         <input
                             type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Filtrer les commentaires..."
                             className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-neutral-100 bg-neutral-50 focus:bg-white focus:border-primary-300 transition-all outline-none text-xs font-medium"
                         />
@@ -471,5 +484,13 @@ export default function CommentsPage() {
                 </div>
             )}
         </motion.div>
+    );
+}
+
+export default function CommentsPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <CommentsPageContent />
+        </Suspense>
     );
 }

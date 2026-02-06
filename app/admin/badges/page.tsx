@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
     Award,
     Zap,
@@ -46,11 +47,15 @@ interface XPConfig {
     [key: string]: number;
 }
 
-export default function BadgesPage() {
+function BadgesPageContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('searchQuery') || '';
+
     const [badges, setBadges] = useState<Badge[]>([]);
     const [xpConfig, setXpConfig] = useState<XPConfig>({});
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -250,6 +255,8 @@ export default function BadgesPage() {
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Rechercher..."
                                 className="pl-9 pr-4 py-2 bg-white border border-neutral-100 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                             />
@@ -269,44 +276,46 @@ export default function BadgesPage() {
                                 <p className="text-neutral-500 font-medium">Aucun badge créé pour le moment.</p>
                             </div>
                         ) : (
-                            badges.map((badge) => {
-                                const IconComp = ICON_MAP[badge.icon] || Award;
-                                return (
-                                    <div key={badge.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 hover:bg-neutral-50/50 transition-all group">
-                                        <div className="flex items-center gap-5">
-                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform ${badge.color} flex-shrink-0`}>
-                                                <IconComp size={28} />
+                            badges
+                                .filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.description.toLowerCase().includes(searchQuery.toLowerCase()))
+                                .map((badge) => {
+                                    const IconComp = ICON_MAP[badge.icon] || Award;
+                                    return (
+                                        <div key={badge.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 hover:bg-neutral-50/50 transition-all group">
+                                            <div className="flex items-center gap-5">
+                                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform ${badge.color} flex-shrink-0`}>
+                                                    <IconComp size={28} />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-neutral-900 flex flex-wrap items-center gap-2">
+                                                        {badge.name}
+                                                        <span className="px-2 py-0.5 bg-neutral-100 text-[8px] font-black uppercase tracking-tighter text-neutral-400 rounded">
+                                                            {badge.rarity}
+                                                        </span>
+                                                    </h3>
+                                                    <p className="text-xs text-neutral-500 mt-0.5">{badge.description}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="font-bold text-neutral-900 flex flex-wrap items-center gap-2">
-                                                    {badge.name}
-                                                    <span className="px-2 py-0.5 bg-neutral-100 text-[8px] font-black uppercase tracking-tighter text-neutral-400 rounded">
-                                                        {badge.rarity}
-                                                    </span>
-                                                </h3>
-                                                <p className="text-xs text-neutral-500 mt-0.5">{badge.description}</p>
+                                            <div className="flex items-center justify-between w-full sm:w-auto sm:gap-8 pl-[4.75rem] sm:pl-0">
+                                                <div className="text-right block">
+                                                    <p className="text-xs font-black text-neutral-900 uppercase tracking-widest flex items-center gap-1 sm:justify-end">
+                                                        <Users size={12} className="text-neutral-400" />
+                                                        {badge.users || 0}
+                                                    </p>
+                                                    <p className="text-[10px] text-neutral-400 font-bold uppercase hidden sm:block">Détentrices</p>
+                                                </div>
+                                                <div className="flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all">
+                                                    <button onClick={() => handleOpenModal(badge)} className="p-2.5 text-neutral-400 hover:text-primary-600 hover:bg-white hover:shadow-sm rounded-xl transition-all">
+                                                        <Edit3 size={18} />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(badge.id)} className="p-2.5 text-neutral-400 hover:text-red-500 hover:bg-white hover:shadow-sm rounded-xl transition-all">
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-between w-full sm:w-auto sm:gap-8 pl-[4.75rem] sm:pl-0">
-                                            <div className="text-right block">
-                                                <p className="text-xs font-black text-neutral-900 uppercase tracking-widest flex items-center gap-1 sm:justify-end">
-                                                    <Users size={12} className="text-neutral-400" />
-                                                    {badge.users || 0}
-                                                </p>
-                                                <p className="text-[10px] text-neutral-400 font-bold uppercase hidden sm:block">Détentrices</p>
-                                            </div>
-                                            <div className="flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all">
-                                                <button onClick={() => handleOpenModal(badge)} className="p-2.5 text-neutral-400 hover:text-primary-600 hover:bg-white hover:shadow-sm rounded-xl transition-all">
-                                                    <Edit3 size={18} />
-                                                </button>
-                                                <button onClick={() => handleDelete(badge.id)} className="p-2.5 text-neutral-400 hover:text-red-500 hover:bg-white hover:shadow-sm rounded-xl transition-all">
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })
+                                    );
+                                })
                         )}
                     </div>
                 </motion.div>
@@ -506,5 +515,13 @@ export default function BadgesPage() {
                 )}
             </AnimatePresence>
         </motion.div>
+    );
+}
+
+export default function BadgesPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <BadgesPageContent />
+        </Suspense>
     );
 }
