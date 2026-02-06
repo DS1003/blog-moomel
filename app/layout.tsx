@@ -49,6 +49,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: description,
       url: '/',
       siteName: siteName,
+      images: [
+        {
+          url: '/images/senegalese-modern-traditional.png',
+          width: 1024,
+          height: 1024,
+          alt: siteName,
+        },
+      ],
       locale: 'fr_FR',
       type: 'website',
     },
@@ -56,6 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: siteName,
       description: description,
+      images: ['/images/senegalese-modern-traditional.png'],
     },
     robots: {
       index: settings.search_indexing !== 'false',

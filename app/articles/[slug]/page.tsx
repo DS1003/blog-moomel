@@ -5,11 +5,40 @@ import ShareButton from '@/app/_components/articles/ShareButton';
 import Button from '@/app/_components/ui/Button';
 import CommentSection from '@/app/_components/articles/CommentSection';
 import { prisma } from '@/lib/prisma';
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const article = await prisma.article.findUnique({
+        where: { slug },
+        include: { images: true }
+    });
+
+    if (!article) return {};
+
+    const imageUrl = article.images[0]?.url || "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=1200&h=800&fit=crop";
+
+    return {
+        title: article.title,
+        description: article.excerpt,
+        openGraph: {
+            title: article.title,
+            description: article.excerpt,
+            images: [{ url: imageUrl }],
+            type: 'article',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: article.title,
+            description: article.excerpt,
+            images: [imageUrl],
+        }
+    };
+}
 
 async function getArticle(slug: string) {
     const session = await getServerSession(authOptions);
