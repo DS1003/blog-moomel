@@ -97,7 +97,7 @@ export default function Hero() {
                                 {/* Single Hero Image - Arch Shape */}
                                 <div className="relative w-full h-full rounded-t-[500px] rounded-b-[40px] lg:rounded-b-[200px] overflow-hidden shadow-2xl shadow-neutral-200/50 mx-auto transform transition-transform hover:scale-[1.02] duration-700">
                                     <Image
-                                        src="https://img.freepik.com/photos-premium/maquillage-naturel-beaute-soins-peau-femme-noire-visage-peau-cosmetologie-publicite-arriere-plan-studio-africain-heureux-frais-lueur-cosmetiques-soins-du-visage-traitement-marketing-gros-plan_590464-94117.jpg"
+                                        src="https://images.unsplash.com/photo-1608248597279-f99d160bfbc8?q=80&w=2000&auto=format&fit=crop"
                                         alt="Moomel Beauty"
                                         fill
                                         className="object-cover"

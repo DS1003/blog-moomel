@@ -109,7 +109,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                 <div className="relative z-10 w-full h-full grid grid-cols-12 grid-rows-12 gap-4 md:gap-5">
                                     <div className="col-span-8 row-span-7 relative rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-xl">
                                         <Image
-                                            src="https://www.mycosmetik.fr/img/cms/beurre-karite-visage.jpg"
+                                            src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=2000"
                                             alt="Beurre de Karité"
                                             fill
                                             className="object-cover"
@@ -125,7 +125,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                     {/* Baobab Oil - Tall Right */}
                                     <div className="col-span-4 row-span-8 relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-lg mt-12">
                                         <Image
-                                            src="https://www.alguoa.com/img/cms/comptoir-des-huiles/huiles/huile-vegetale-baobab-bio-comptoir-des-huiles-590x700.jpg"
+                                            src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=2000"
                                             alt="Huile de Baobab"
                                             fill
                                             className="object-cover"
@@ -139,7 +139,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                     {/* Moringa - Bottom Left */}
                                     <div className="col-span-5 row-span-5 relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-lg -mt-6">
                                         <Image
-                                            src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&q=80&w=600"
+                                            src="https://images.unsplash.com/photo-1611091758858-a92c483ea46d?auto=format&fit=crop&q=80&w=600"
                                             alt="Moringa"
                                             fill
                                             className="object-cover"
@@ -156,7 +156,7 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                     {/* Bissap - Bottom Right */}
                                     <div className="col-span-7 row-span-4 relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-lg">
                                         <Image
-                                            src="https://aromanature.ch/wp-content/uploads/2018/02/HUILE-DHIBISCUS-scaled.jpg"
+                                            src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1974"
                                             alt="Bissap"
                                             fill
                                             className="object-cover"

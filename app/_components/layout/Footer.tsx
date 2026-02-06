@@ -101,7 +101,6 @@ export default function Footer() {
             <ul className="space-y-3 md:space-y-4">
               {[
                 { label: t.footer.privacy, href: '/privacy' },
-                { label: t.footer.terms, href: '/terms' },
                 { label: t.footer.cookies, href: '/cookies' },
                 { label: t.footer.mentions, href: '/mentions-legales' }
               ].map((link, index) => (
