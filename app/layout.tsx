@@ -84,8 +84,11 @@ export default async function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
       <head>
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          id="moomel-theme-colors"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
           :root {
             --primary-500: ${primaryColor};
             --primary-600: ${primaryColor}dd;
