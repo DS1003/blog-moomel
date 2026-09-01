@@ -106,6 +106,40 @@ export const dictionaries = {
             filter_analysis: "Analyses",
             filter_tutorials: "Tutoriels"
         },
+        categories_page: {
+            collection: "Collection",
+            title: "Nos Catégories",
+            subtitle: "Explorez nos univers dédiés à la beauté sénégalaise et naturelle.",
+            articles_count: "Articles",
+            categories: {
+                "soins-visage": {
+                    name: "Soins Visage",
+                    description: "Crèmes, sérums et masques naturels pour un teint éclatant."
+                },
+                "corps-bain": {
+                    name: "Corps & Bain",
+                    description: "Rituels de bain et hydratation profonde pour le corps."
+                },
+                "cheveux": {
+                    name: "Cheveux",
+                    description: "Solutions naturelles pour des cheveux forts et sains."
+                },
+                "sante-bien-etre": {
+                    name: "Santé & Bien-être",
+                    description: "Compléments et astuces pour une beauté qui vient de l'intérieur."
+                }
+            }
+        },
+        article_page: {
+            engagement_title: "Cet article vous a plu ?",
+            engagement_xp: "Gagnez",
+            engagement_xp_points: "+5 XP",
+            engagement_xp_action: "en likant cet article !",
+            engagement_login: "Connectez-vous pour sauvegarder votre progression.",
+            error_title: "Une erreur est survenue",
+            error_desc: "Impossible de charger l'article pour le moment.",
+            back_to_articles: "Retour aux articles"
+        },
         footer: {
             desc: "L’essence de la beauté naturelle, à portée de main. Un pur concentré de bonheur naturellement efficace.",
             navigation: "Navigation",
@@ -251,6 +285,40 @@ export const dictionaries = {
             filter_wellness: "Wellness",
             filter_analysis: "Analyses",
             filter_tutorials: "Tutorials"
+        },
+        categories_page: {
+            collection: "Collection",
+            title: "Our Categories",
+            subtitle: "Explore our universes dedicated to Senegalese and natural beauty.",
+            articles_count: "Articles",
+            categories: {
+                "soins-visage": {
+                    name: "Face Care",
+                    description: "Natural creams, serums and masks for a radiant complexion."
+                },
+                "corps-bain": {
+                    name: "Body & Bath",
+                    description: "Bath rituals and deep hydration for the body."
+                },
+                "cheveux": {
+                    name: "Hair",
+                    description: "Natural solutions for strong and healthy hair."
+                },
+                "sante-bien-etre": {
+                    name: "Health & Wellness",
+                    description: "Supplements and tips for beauty that comes from within."
+                }
+            }
+        },
+        article_page: {
+            engagement_title: "Did you like this article?",
+            engagement_xp: "Earn",
+            engagement_xp_points: "+5 XP",
+            engagement_xp_action: "by liking this article!",
+            engagement_login: "Log in to save your progress.",
+            error_title: "An error occurred",
+            error_desc: "Unable to load the article at this time.",
+            back_to_articles: "Back to articles"
         },
         footer: {
             desc: "The essence of natural beauty, within reach. A pure concentrate of naturally effective happiness.",

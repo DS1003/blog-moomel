@@ -5,6 +5,8 @@ import ShareButton from '@/app/_components/articles/ShareButton';
 import Button from '@/app/_components/ui/Button';
 import CommentSection from '@/app/_components/articles/CommentSection';
 import { BilingualText, BilingualHtml } from '@/app/_components/articles/BilingualContent';
+import EngagementSection from '@/app/_components/articles/EngagementSection';
+import TranslatedText from '@/app/_components/ui/TranslatedText';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -175,25 +177,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     </div>
 
                     {/* Engagement Section */}
-                    <div className="mt-16 pt-8 border-t border-neutral-200">
-                        <h3 className="text-2xl font-bold text-neutral-800 mb-6">
-                            Cet article vous a plu ?
-                        </h3>
-                        <div className="flex items-center justify-between bg-primary-50 rounded-2xl p-6 border border-primary-100">
-                            <div>
-                                <p className="text-neutral-700 mb-2">
-                                    Gagnez <span className="font-bold text-primary-600">+5 XP</span> en likant cet article !
-                                </p>
-                                <p className="text-sm text-neutral-500">
-                                    Connectez-vous pour sauvegarder votre progression.
-                                </p>
-                            </div>
-                            <div className="flex gap-4">
-                                <LikeButton articleId={article.id} initialLikes={article._count.likes} isLiked={article.isLiked} />
-                                <ShareButton title={article.title} text={article.excerpt || "Découvrez cet article sur Moomel !"} />
-                            </div>
-                        </div>
-                    </div>
+                    <EngagementSection 
+                        articleId={article.id} 
+                        initialLikes={article._count.likes} 
+                        isLiked={article.isLiked} 
+                        title={article.title}
+                        excerpt={article.excerpt || ""}
+                    />
 
                     {/* Comments Section */}
                     <CommentSection articleId={article.id} />
@@ -205,9 +195,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-neutral-800 mb-4">Une erreur est survenue</h1>
-                    <p className="text-neutral-600 mb-8">Impossible de charger l'article pour le moment.</p>
-                    <Button href="/articles" variant="primary">Retour aux articles</Button>
+                    <h1 className="text-2xl font-bold text-neutral-800 mb-4">
+                        <TranslatedText path="article_page.error_title" fallback="Une erreur est survenue" />
+                    </h1>
+                    <p className="text-neutral-600 mb-8">
+                        <TranslatedText path="article_page.error_desc" fallback="Impossible de charger l'article pour le moment." />
+                    </p>
+                    <Button href="/articles" variant="primary">
+                        <TranslatedText path="article_page.back_to_articles" fallback="Retour aux articles" />
+                    </Button>
                 </div>
             </div>
         );

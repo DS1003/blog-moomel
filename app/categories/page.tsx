@@ -1,51 +1,56 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
-const categories = [
-    {
-        slug: 'soins-visage',
-        name: 'Soins Visage',
-        description: 'Crèmes, sérums et masques naturels pour un teint éclatant.',
-        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop',
-        count: 12
-    },
-    {
-        slug: 'corps-bain',
-        name: 'Corps & Bain',
-        description: 'Rituels de bain et hydratation profonde pour le corps.',
-        image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800&auto=format&fit=crop',
-        count: 8
-    },
-    {
-        slug: 'cheveux',
-        name: 'Cheveux',
-        description: 'Solutions naturelles pour des cheveux forts et sains.',
-        image: 'https://images.unsplash.com/photo-1520333789090-1afc82db536a?q=80&w=800&auto=format&fit=crop',
-        count: 15
-    },
-    {
-        slug: 'sante-bien-etre',
-        name: 'Santé & Bien-être',
-        description: 'Compléments et astuces pour une beauté qui vient de l\'intérieur.',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop',
-        count: 6
-    },
-];
+import { useLanguage } from '@/app/_components/providers/LanguageProvider';
 
 export default function CategoriesPage() {
+    const { t } = useLanguage();
+
+    const categories = [
+        {
+            slug: 'soins-visage',
+            name: t.categories_page.categories['soins-visage'].name,
+            description: t.categories_page.categories['soins-visage'].description,
+            image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop',
+            count: 12
+        },
+        {
+            slug: 'corps-bain',
+            name: t.categories_page.categories['corps-bain'].name,
+            description: t.categories_page.categories['corps-bain'].description,
+            image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800&auto=format&fit=crop',
+            count: 8
+        },
+        {
+            slug: 'cheveux',
+            name: t.categories_page.categories['cheveux'].name,
+            description: t.categories_page.categories['cheveux'].description,
+            image: 'https://images.unsplash.com/photo-1520333789090-1afc82db536a?q=80&w=800&auto=format&fit=crop',
+            count: 15
+        },
+        {
+            slug: 'sante-bien-etre',
+            name: t.categories_page.categories['sante-bien-etre'].name,
+            description: t.categories_page.categories['sante-bien-etre'].description,
+            image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop',
+            count: 6
+        },
+    ];
+
     return (
         <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 bg-neutral-50">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16 animate-slide-up">
                     <span className="text-primary-600 font-medium tracking-widest text-sm uppercase mb-2 block">
-                        Collection
+                        {t.categories_page.collection}
                     </span>
                     <h1 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-6">
-                        Nos Catégories
+                        {t.categories_page.title}
                     </h1>
                     <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-                        Explorez nos univers dédiés à la beauté sénégalaise et naturelle.
+                        {t.categories_page.subtitle}
                     </p>
                 </div>
 
@@ -75,7 +80,7 @@ export default function CategoriesPage() {
                                         {category.description}
                                     </p>
                                     <span className="text-xs font-bold text-primary-600 uppercase tracking-wider mt-2 block">
-                                        {category.count} Articles
+                                        {category.count} {t.categories_page.articles_count}
                                     </span>
                                 </div>
                             </div>
