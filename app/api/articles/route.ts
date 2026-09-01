@@ -21,10 +21,13 @@ export async function GET() {
   return NextResponse.json(articles);
 }
 
-const articleSchema = z.object({
+  const articleSchema = z.object({
   title: z.string().min(3),
   excerpt: z.string().min(10),
   content: z.string().min(20),
+  titleEn: z.string().optional(),
+  excerptEn: z.string().optional(),
+  contentEn: z.string().optional(),
   published: z.boolean().optional(),
   imageUrl: z.string().url().optional().or(z.literal('')),
   categoryId: z.string().optional(),
@@ -62,6 +65,9 @@ export async function POST(req: NextRequest) {
         slug: finalSlug,
         excerpt: data.excerpt,
         content: data.content,
+        titleEn: data.titleEn,
+        excerptEn: data.excerptEn,
+        contentEn: data.contentEn,
         author: { connect: { email: session.user?.email! } },
         published: data.published || false,
         category: data.categoryId ? { connect: { id: data.categoryId } } : undefined,

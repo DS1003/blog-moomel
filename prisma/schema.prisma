@@ -84,6 +84,10 @@ model Article {
   slug        String   @unique
   excerpt     String   @db.Text
   content     String   @db.Text
+  titleEn     String?
+  excerptEn   String?  @db.Text
+  contentEn   String?  @db.Text
+
   published   Boolean  @default(false)
   featured    Boolean  @default(false)
   archived    Boolean  @default(false)

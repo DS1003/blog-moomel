@@ -45,22 +45,77 @@ export async function POST(req: NextRequest) {
 
         // Extraction logic
         // pdf2json output often keeps layout, so we might need to clean it up
-        const lines = parsedText.split(/\r\n|\n/).filter((line: string) => line.trim().length > 0);
+        const rawLines = parsedText.split(/\r\n|\n/);
+        const nonEmptyLines = rawLines.map(l => l.trim()).filter(l => l.length > 0);
 
         let title = file.name.replace('.pdf', '');
         let excerpt = "";
-        let content = parsedText;
+        let content = "";
 
-        if (lines.length > 0) {
+        if (nonEmptyLines.length > 0) {
             // Simple heuristic: First line is likely title (or close to it)
-            title = lines[0].trim();
+            title = nonEmptyLines[0];
 
             // Try to get a decent excerpt
-            if (lines.length > 2) {
-                const potentialExcerpt = lines.slice(1, 5).join(' ');
+            if (nonEmptyLines.length > 2) {
+                const potentialExcerpt = nonEmptyLines.slice(1, 5).join(' ');
                 excerpt = potentialExcerpt.substring(0, 300) + (potentialExcerpt.length > 300 ? "..." : "");
             }
-            content = lines.slice(1).join('\n\n');
+            
+            // Build content HTML
+            let cleaned = parsedText.replace(/----------------Page \(\d+\) Break----------------/g, '');
+            let paragraphs = cleaned.split(/\r?\n\s*\r?\n/);
+            
+            let validParagraphs = paragraphs
+                .map(p => {
+                    // Fix hyphenated words (including various dash characters and optional spaces)
+                    let text = p.replace(/[-‐‑‒–—―\u00AD]\s*\r?\n\s*/g, '');
+                    
+                    // Heuristic: If a line ends with a letter and the next line starts with a lowercase letter,
+                    // and there is no space before the newline, it is highly likely a word that was split
+                    // without a hyphen by the PDF engine (e.g. "re\nmarkable" -> "remarkable").
+                    text = text.replace(/([a-zA-Z])\r?\n([a-z])/g, '$1$2');
+                    
+                    // Replace remaining newlines with spaces (for normal line wraps that had trailing spaces, or between punctuation)
+                    text = text.replace(/\r?\n/g, ' ').trim();
+                    
+                    // Fix accidentally split words by multiple spaces
+                    return text.replace(/\s{2,}/g, ' ');
+                })
+                .filter(p => p.length > 0);
+                
+            if (validParagraphs.length <= 2) {
+                validParagraphs = nonEmptyLines.slice(1);
+            } else {
+                if (validParagraphs[0] === title) {
+                    validParagraphs = validParagraphs.slice(1);
+                }
+            }
+            
+            content = validParagraphs.map(p => {
+                // Heuristic for heading: short paragraph (less than 80 chars), 
+                // doesn't end with a period or comma.
+                if (p.length < 80 && !p.endsWith('.') && !p.endsWith(',')) {
+                    return `<h2>${p}</h2>`;
+                }
+                
+                // Heuristic for bullet points that contain a Title + Paragraph
+                // Matches "● Title Here Next sentence starts..."
+                const bulletMatch = p.match(/^[●•*\-]\s+([A-Z][^.!?]{2,60}?)\s+([A-Z].+)$/);
+                if (bulletMatch) {
+                    return `<h3>${bulletMatch[1].trim()}</h3><p>${bulletMatch[2].trim()}</p>`;
+                }
+                
+                // Standard bullet point
+                if (p.startsWith('●') || p.startsWith('•') || p.startsWith('- ')) {
+                    return `<ul><li>${p.substring(1).trim()}</li></ul>`;
+                }
+                
+                return `<p>${p}</p>`;
+            }).join('');
+            
+            // Clean up consecutive </ul><ul>
+            content = content.replace(/<\/ul>\s*<ul>/g, '');
         }
 
         return NextResponse.json({

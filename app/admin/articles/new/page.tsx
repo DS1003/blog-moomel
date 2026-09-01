@@ -12,13 +12,13 @@ import {
     Info,
     Globe,
     FileEdit,
-    AlertCircle,
-    Bold,
-    Italic,
-    List,
-    Link as LinkIcon
+    AlertCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import 'react-quill-new/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 interface Category {
     id: string;
@@ -36,10 +36,15 @@ export default function NewArticlePage() {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const contentRef = useRef<HTMLTextAreaElement>(null);
 
+    const [activeTab, setActiveTab] = useState<'fr' | 'en'>('fr');
+
     const [formData, setFormData] = useState({
         title: '',
         excerpt: '',
         content: '',
+        titleEn: '',
+        excerptEn: '',
+        contentEn: '',
         imageUrl: '',
         published: false,
         categoryId: ''
@@ -72,24 +77,7 @@ export default function NewArticlePage() {
         setFormData(prev => ({ ...prev, published: e.target.checked }));
     };
 
-    const insertText = (before: string, after: string = '') => {
-        const textarea = contentRef.current;
-        if (!textarea) return;
-
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const previousValue = textarea.value;
-        const selectedText = previousValue.substring(start, end);
-
-        const newValue = previousValue.substring(0, start) + before + selectedText + after + previousValue.substring(end);
-
-        setFormData(prev => ({ ...prev, content: newValue }));
-
-        setTimeout(() => {
-            textarea.focus();
-            textarea.setSelectionRange(start + before.length, end + before.length);
-        }, 0);
-    };
+    // Fonction supprimée car remplacée par ReactQuill
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -176,17 +164,35 @@ export default function NewArticlePage() {
                 {/* Main Content Card */}
                 <div className="lg:col-span-8 bg-white rounded-[3rem] shadow-sm border border-neutral-100 p-8 md:p-10 space-y-10">
 
+                    {/* Language Tabs */}
+                    <div className="flex gap-4 border-b border-neutral-100 pb-4">
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('fr')}
+                            className={`text-xs font-black uppercase tracking-[0.2em] px-4 py-2 rounded-xl transition-all ${activeTab === 'fr' ? 'bg-primary-50 text-primary-600' : 'text-neutral-400 hover:bg-neutral-50'}`}
+                        >
+                            Français
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('en')}
+                            className={`text-xs font-black uppercase tracking-[0.2em] px-4 py-2 rounded-xl transition-all ${activeTab === 'en' ? 'bg-primary-50 text-primary-600' : 'text-neutral-400 hover:bg-neutral-50'}`}
+                        >
+                            English
+                        </button>
+                    </div>
+
                     {/* Header Input Area */}
                     <div className="space-y-8">
                         <div>
                             <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em] mb-4">Identité de l'article</label>
                             <input
                                 type="text"
-                                name="title"
-                                required
-                                value={formData.title}
+                                name={activeTab === 'fr' ? 'title' : 'titleEn'}
+                                required={activeTab === 'fr'}
+                                value={activeTab === 'fr' ? formData.title : formData.titleEn}
                                 onChange={handleChange}
-                                placeholder="Donnez un titre puissant et évocateur..."
+                                placeholder={activeTab === 'fr' ? "Donnez un titre puissant et évocateur..." : "Give a powerful and evocative title..."}
                                 className="w-full px-0 py-4 bg-transparent border-b-2 border-neutral-50 focus:border-primary-500 transition-all outline-none font-serif text-3xl md:text-4xl text-neutral-900 placeholder:text-neutral-200"
                             />
                         </div>
@@ -194,17 +200,17 @@ export default function NewArticlePage() {
                         <div className="space-y-4">
                             <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Accroche Émotionnelle (Excerpt)</label>
                             <textarea
-                                name="excerpt"
-                                required
+                                name={activeTab === 'fr' ? 'excerpt' : 'excerptEn'}
+                                required={activeTab === 'fr'}
                                 rows={2}
-                                value={formData.excerpt}
+                                value={activeTab === 'fr' ? formData.excerpt : formData.excerptEn}
                                 onChange={handleChange}
-                                placeholder="Quelques phrases pour séduire vos lectrices dès le premier coup d'œil..."
+                                placeholder={activeTab === 'fr' ? "Quelques phrases pour séduire vos lectrices dès le premier coup d'œil..." : "A few sentences to seduce your readers at first glance..."}
                                 className="w-full px-5 py-4 bg-neutral-50/50 border border-neutral-100 rounded-2xl focus:bg-white focus:border-primary-300 transition-all outline-none font-medium text-sm md:text-md text-neutral-700 leading-relaxed resize-none"
                             />
                             <div className="flex justify-end">
-                                <span className={`text-[9px] font-black uppercase tracking-widest ${formData.excerpt.length > 280 ? 'text-rose-500' : 'text-neutral-300'}`}>
-                                    {formData.excerpt.length} / 300
+                                <span className={`text-[9px] font-black uppercase tracking-widest ${(activeTab === 'fr' ? formData.excerpt.length : formData.excerptEn.length) > 280 ? 'text-rose-500' : 'text-neutral-300'}`}>
+                                    {activeTab === 'fr' ? formData.excerpt.length : formData.excerptEn.length} / 300
                                 </span>
                             </div>
                         </div>
@@ -217,21 +223,8 @@ export default function NewArticlePage() {
                         <div className="flex items-center justify-between">
                             <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Cœur de l'Article</label>
 
-                            {/* Toolbar */}
+                            {/* Toolbar PDF uniquement (le reste est géré par Quill) */}
                             <div className="flex items-center gap-1 bg-neutral-50 rounded-xl p-1 border border-neutral-100">
-                                <button type="button" onClick={() => insertText('**', '**')} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-neutral-500 hover:text-primary-600 transition-all" title="Gras">
-                                    <Bold size={14} />
-                                </button>
-                                <button type="button" onClick={() => insertText('*', '*')} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-neutral-500 hover:text-primary-600 transition-all" title="Italique">
-                                    <Italic size={14} />
-                                </button>
-                                <button type="button" onClick={() => insertText('\n- ')} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-neutral-500 hover:text-primary-600 transition-all" title="Liste">
-                                    <List size={14} />
-                                </button>
-                                <button type="button" onClick={() => insertText('[', '](url)')} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-neutral-500 hover:text-primary-600 transition-all" title="Lien">
-                                    <LinkIcon size={14} />
-                                </button>
-                                <div className="w-px h-4 bg-neutral-200 mx-1"></div>
                                 <button
                                     type="button"
                                     onClick={() => pdfInputRef.current?.click()}
@@ -254,12 +247,23 @@ export default function NewArticlePage() {
                                 const res = await fetch('/api/parse-pdf', { method: 'POST', body: fd });
                                 if (res.ok) {
                                     const data = await res.json();
-                                    setFormData(prev => ({
-                                        ...prev,
-                                        title: data.title || prev.title,
-                                        excerpt: data.excerpt || prev.excerpt,
-                                        content: data.content || prev.content
-                                    }));
+                                    setFormData(prev => {
+                                        if (activeTab === 'en') {
+                                            return {
+                                                ...prev,
+                                                titleEn: data.title || prev.titleEn,
+                                                excerptEn: data.excerpt || prev.excerptEn,
+                                                contentEn: data.content || prev.contentEn
+                                            };
+                                        } else {
+                                            return {
+                                                ...prev,
+                                                title: data.title || prev.title,
+                                                excerpt: data.excerpt || prev.excerpt,
+                                                content: data.content || prev.content
+                                            };
+                                        }
+                                    });
                                 }
                             } finally {
                                 setParsingPdf(false);
@@ -268,15 +272,13 @@ export default function NewArticlePage() {
                         }} />
 
                         <div className="relative group">
-                            <textarea
-                                ref={contentRef}
-                                name="content"
-                                required
-                                rows={18}
-                                value={formData.content}
-                                onChange={handleChange}
-                                placeholder="L'histoire commence ici..."
-                                className="w-full px-8 py-8 bg-neutral-50/30 border-2 border-dashed border-neutral-100 rounded-[2.5rem] focus:bg-white focus:border-primary-300 focus:border-solid transition-all outline-none font-serif text-lg leading-[1.8] text-neutral-800"
+                            <ReactQuill
+                                key={`quill-${activeTab}`}
+                                theme="snow"
+                                value={activeTab === 'fr' ? formData.content : formData.contentEn}
+                                onChange={(content) => setFormData(prev => ({ ...prev, [activeTab === 'fr' ? 'content' : 'contentEn']: content }))}
+                                placeholder={activeTab === 'fr' ? "L'histoire commence ici..." : "The story begins here..."}
+                                className="w-full bg-neutral-50/30 border-2 border-dashed border-neutral-100 rounded-3xl overflow-hidden focus-within:bg-white focus-within:border-primary-300 focus-within:border-solid transition-all [&_.ql-toolbar]:border-none [&_.ql-toolbar]:bg-neutral-50/50 [&_.ql-container]:border-none [&_.ql-editor]:min-h-[400px] [&_.ql-editor]:font-serif [&_.ql-editor]:text-lg [&_.ql-editor]:leading-[1.8] [&_.ql-editor]:text-neutral-800"
                             />
                         </div>
                     </div>

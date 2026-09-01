@@ -7,6 +7,7 @@ import CommentList from "@/app/_components/comments/CommentList";
 import CommentForm from "@/app/_components/comments/CommentForm";
 import Image from "next/image";
 import Button from "@/app/_components/ui/Button";
+import { BilingualText, BilingualHtml } from '@/app/_components/articles/BilingualContent';
 
 async function fetchArticle(id: string) {
   const res = await fetch(`/api/articles?id=${id}`, { cache: "no-store" });
@@ -73,7 +74,7 @@ export default function ArticlePage() {
       {/* Card Article */}
       <article className="card card-hover p-8 md:p-12 mb-12 relative z-10">
         <h1 className="text-4xl md:text-5xl font-bold text-gradient mb-4 leading-tight">
-          {article.title}
+          <BilingualText fr={article.title} en={article.titleEn} />
         </h1>
         <div className="flex items-center space-x-4 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
@@ -89,9 +90,11 @@ export default function ArticlePage() {
             {new Date(article.createdAt).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
           </span>
         </div>
-        <div className="prose prose-lg max-w-none text-neutral-800 mb-8">
-          {article.content}
-        </div>
+        <BilingualHtml 
+          fr={article.content}
+          en={article.contentEn}
+          className="prose prose-lg max-w-none text-neutral-800 mb-8 break-words overflow-hidden"
+        />
         {article.images && article.images.length > 1 && (
           <div className="flex gap-4 overflow-x-auto mt-6">
             {article.images.slice(1).map((img: { url: string }, i: number) => (

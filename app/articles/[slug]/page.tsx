@@ -4,6 +4,7 @@ import LikeButton from '@/app/_components/articles/LikeButton';
 import ShareButton from '@/app/_components/articles/ShareButton';
 import Button from '@/app/_components/ui/Button';
 import CommentSection from '@/app/_components/articles/CommentSection';
+import { BilingualText, BilingualHtml } from '@/app/_components/articles/BilingualContent';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -99,7 +100,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         </div>
 
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-sm">
-                            {article.title}
+                            <BilingualText fr={article.title} en={article.titleEn} />
                         </h1>
 
                         <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-white/90">
@@ -135,10 +136,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     <div className="prose prose-lg md:prose-xl prose-neutral mx-auto prose-p:my-8 prose-p:leading-loose prose-headings:font-serif prose-headings:text-primary-900">
 
                         {/* Excerpt */}
-                        {article.excerpt && (
+                        {(article.excerpt || article.excerptEn) && (
                             <div className="mb-12 not-prose">
                                 <p className="text-xl md:text-2xl font-serif text-neutral-600 leading-relaxed italic border-l-4 border-primary-300 pl-6 py-2">
-                                    {article.excerpt}
+                                    <BilingualText fr={article.excerpt} en={article.excerptEn} />
                                 </p>
                             </div>
                         )}
@@ -156,17 +157,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             </div>
                             {/* Optional caption if available, using title for now */}
                             <p className="text-center text-sm text-neutral-500 mt-3 italic">
-                                {article.title}
+                                <BilingualText fr={article.title} en={article.titleEn} />
                             </p>
                         </div>
 
                         {/* Main Content */}
-                        <div
-                            dangerouslySetInnerHTML={{ __html: article.content }}
+                        <BilingualHtml
+                            fr={article.content}
+                            en={article.contentEn}
                             className="
                                 [&>p]:mb-8 
-                                [&>p]:text-justify 
                                 text-neutral-800
+                                break-words
+                                overflow-hidden
                             "
                         />
                     </div>
