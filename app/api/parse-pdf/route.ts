@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         if (geminiApiKey && nonEmptyLines.length > 0) {
             try {
                 const genAI = new GoogleGenerativeAI(geminiApiKey);
-                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
                 
                 const prompt = `Tu es un assistant de formatage expert. Je vais te donner le texte brut extrait d'un fichier PDF.
 Ton objectif est de renvoyer ce texte formaté en HTML propre, prêt à être inséré dans un éditeur WYSIWYG de blog (comme ReactQuill).

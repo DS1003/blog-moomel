@@ -32,6 +32,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [parsingPdf, setParsingPdf] = useState(false);
+    const [formattingAi, setFormattingAi] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
 
@@ -101,7 +102,38 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
         setFormData(prev => ({ ...prev, published: e.target.checked }));
     };
 
-    // Fonction supprimée car remplacée par ReactQuill
+    const handleAiFormat = async () => {
+        const textToFormat = activeTab === 'fr' ? formData.content : formData.contentEn;
+        if (!textToFormat || textToFormat.trim() === '') {
+            alert("Veuillez d'abord insérer du texte à formater.");
+            return;
+        }
+
+        setFormattingAi(true);
+        try {
+            const res = await fetch('/api/format-article', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textToFormat })
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok && data.content) {
+                setFormData(prev => ({
+                    ...prev,
+                    [activeTab === 'fr' ? 'content' : 'contentEn']: data.content
+                }));
+            } else {
+                alert(`Erreur IA: ${data.error || 'Erreur inconnue'}`);
+            }
+        } catch (error) {
+            console.error("Format error", error);
+            alert("Erreur lors de la communication avec l'IA");
+        } finally {
+            setFormattingAi(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -251,16 +283,35 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
                         <div className="flex items-center justify-between">
                             <label className="block text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">Contenu</label>
 
-                            {/* Toolbar PDF uniquement */}
+                            {/* Outils externes (PDF, IA) */}
                             <div className="flex items-center gap-1 bg-neutral-50 rounded-xl p-1 border border-neutral-100">
                                 <button
                                     type="button"
                                     onClick={() => pdfInputRef.current?.click()}
-                                    disabled={parsingPdf}
-                                    className="px-3 py-1 text-[9px] font-black uppercase tracking-widest text-primary-600 hover:bg-white hover:shadow-sm rounded-lg transition-all flex items-center gap-1"
+                                    disabled={parsingPdf || formattingAi}
+                                    className="px-3 py-1 text-[9px] font-black uppercase tracking-widest text-primary-600 hover:bg-white hover:shadow-sm rounded-lg transition-all flex items-center gap-1 disabled:opacity-50"
                                 >
-                                    <Zap size={10} />
+                                    {parsingPdf ? (
+                                        <div className="w-3 h-3 border-2 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+                                    ) : (
+                                        <Zap size={10} />
+                                    )}
                                     <span>PDF</span>
+                                </button>
+                                
+                                <button
+                                    type="button"
+                                    onClick={handleAiFormat}
+                                    disabled={parsingPdf || formattingAi}
+                                    className="px-3 py-1 text-[9px] font-black uppercase tracking-widest text-purple-600 hover:bg-white hover:shadow-sm rounded-lg transition-all flex items-center gap-1 disabled:opacity-50"
+                                    title="Mise en forme Magique IA"
+                                >
+                                    {formattingAi ? (
+                                        <div className="w-3 h-3 border-2 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                                    ) : (
+                                        <span>✨</span>
+                                    )}
+                                    <span>IA</span>
                                 </button>
                             </div>
                         </div>
