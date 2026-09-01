@@ -8,7 +8,9 @@ interface Article {
   id: string;
   slug: string;
   title: string;
+  titleEn?: string | null;
   excerpt: string;
+  excerptEn?: string | null;
   author: { name: string | null };
   createdAt: Date | string;
   images: { url: string }[];
@@ -53,7 +55,9 @@ export default function ArticleList({ articles }: ArticleListProps) {
             id={article.id}
             slug={article.slug}
             title={article.title}
+            titleEn={article.titleEn}
             excerpt={article.excerpt}
+            excerptEn={article.excerptEn}
             author={article.author?.name || "Moomel"}
             date={new Date(article.createdAt).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', {
               year: 'numeric',

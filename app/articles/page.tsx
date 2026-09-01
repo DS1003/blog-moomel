@@ -12,8 +12,10 @@ export default async function ArticlesPage() {
             select: {
                 id: true,
                 title: true,
+                titleEn: true,
                 slug: true,
                 excerpt: true,
+                excerptEn: true,
                 createdAt: true,
                 author: {
                     select: {

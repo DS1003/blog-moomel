@@ -1,18 +1,21 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { BilingualText } from "./BilingualContent";
 
 interface ArticleCardProps {
   id: string;
   slug: string;
   title: string;
+  titleEn?: string | null;
   excerpt: string;
+  excerptEn?: string | null;
   author: string;
   date: string;
   images: string[];
 }
 
-export default function ArticleCard({ id, slug, title, excerpt, author, date, images }: ArticleCardProps) {
+export default function ArticleCard({ id, slug, title, titleEn, excerpt, excerptEn, author, date, images }: ArticleCardProps) {
   return (
     <Link
       href={`/articles/${slug}`}
@@ -52,10 +55,10 @@ export default function ArticleCard({ id, slug, title, excerpt, author, date, im
       {/* Content */}
       <div className="flex flex-col gap-2 px-1">
         <h3 className="text-xl md:text-2xl font-serif text-neutral-900 leading-[1.2] group-hover:underline underline-offset-4 decoration-1 decoration-neutral-300 transition-all">
-          {title}
+          <BilingualText fr={title} en={titleEn} />
         </h3>
         <p className="text-sm text-neutral-500 line-clamp-2 font-light leading-relaxed">
-          {excerpt}
+          <BilingualText fr={excerpt} en={excerptEn} />
         </p>
         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-neutral-400 mt-2 font-medium">
           <span>{author}</span>

@@ -9,8 +9,10 @@ import ScrollReveal from '@/app/_components/ui/ScrollReveal';
 type Article = {
     id: string;
     title: string;
+    titleEn?: string | null;
     slug: string;
     excerpt: string | null;
+    excerptEn?: string | null;
     author: { name: string | null };
     createdAt: Date;
     images: { url: string }[];
@@ -33,7 +35,9 @@ export default function ArticlesPageView({ articles }: { articles: Article[] }) 
     const filteredArticles = useMemo(() => {
         return articles.filter(article => {
             const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
+                (article.titleEn?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+                (article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+                (article.excerptEn?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
 
             const matchesCategory = selectedCategory === 'All' ||
                 (article as any).category?.name === selectedCategory; // Fallback if category name matches

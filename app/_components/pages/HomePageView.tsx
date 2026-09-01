@@ -16,8 +16,10 @@ import { motion } from "framer-motion";
 type Article = {
     id: string;
     title: string;
+    titleEn?: string | null;
     slug: string;
     excerpt: string | null;
+    excerptEn?: string | null;
     author: { name: string | null };
     createdAt: Date;
     images: { url: string }[];
@@ -323,7 +325,9 @@ export default function HomePageView({ articles }: { articles: Article[] }) {
                                     id={article.id}
                                     slug={article.slug}
                                     title={article.title}
+                                    titleEn={article.titleEn}
                                     excerpt={article.excerpt || ""}
+                                    excerptEn={article.excerptEn || ""}
                                     author={article.author.name || "Moomel"}
                                     date={new Date(article.createdAt).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                                     images={article.images.map(img => img.url)}
